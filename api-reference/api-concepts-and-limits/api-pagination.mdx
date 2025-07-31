@@ -3,4 +3,235 @@ title: "Pagination & Filtering"
 description: "Understand how to access large datasets efficiently: review pagination models, query parameters, and supported filters for both REST and WebSocket APIs."
 ---
 
-*This page will automatically be generated from the codebase*
+# Pagination & Filtering
+
+Efficient data retrieval is crucial when dealing with large datasets in any API. This documentation explains how to effectively access large collections through pagination models and filtering capabilities, applicable to both REST and WebSocket APIs. You will learn to use query parameters to narrow down results, manage response sizes, and interact with data streams in real-time.
+
+---
+
+## Overview
+
+Pagination and filtering empower you to control what data you receive and how much, improving performance and usability. Whether fetching lists of products, chat messages, notifications, or presence updates, using these mechanisms lets your applications scale gracefully and deliver relevant data quickly.
+
+This guide covers:
+
+- Common pagination models used in REST APIs
+- Key query parameters for paging results
+- Available filtering options and supported parameters
+- How filtering and pagination translate to WebSocket message subscriptions
+
+---
+
+## Pagination Models
+
+Pagination breaks down large datasets into manageable chunks or "pages." The API uses the following pagination approach:
+
+### Offset-Based Pagination (REST)
+
+REST endpoints typically rely on **page** and **limit** query parameters:
+
+- `page`: Specifies which page of results to retrieve (starts at 1).
+- `limit`: Defines how many items are returned per page.
+
+Example:
+
+```http
+GET https://api.example.com/v1/products?page=2&limit=20
+Authorization: X-API-Key your_api_key
+```
+
+Requesting page 2 with a limit of 20 returns items 21-40.
+
+### Response Structure for Pagination
+
+Successful paginated GET requests return:
+
+```json
+{
+  "data": [ /* array of items */ ],
+  "total": 150,        // Total number of items
+  "page": 2,           // Current page number
+  "limit": 20          // Number of items per page
+}
+```
+
+This structure helps you build UIs with page navigation controls and display the total available items.
+
+<Check>
+Always include `page` and `limit` parameters, even if you're retrieving the first page, to ensure predictable pagination behavior.
+</Check>
+
+---
+
+## Filtering Data
+
+Filtering enables you to narrow results based on specific criteria without processing the entire dataset.
+
+### REST API Filtering
+
+Filters are added as query parameters alongside pagination:
+
+| Parameter | Description                     | Example Value   |
+|-----------|---------------------------------|----------------|
+| `category`| Filter products by category      | `electronics`  |
+| `search`  | Search term (text matching)     | `smartphone`   |
+
+Example:
+
+```http
+GET https://api.example.com/v1/products?category=books&limit=10
+Authorization: X-API-Key your_api_key
+```
+
+This query returns the first 10 products filtered by the "books" category.
+
+<Note>
+Filtering parameters vary per endpoint; always refer to specific endpoint docs for supported filters.
+</Note>
+
+### WebSocket API Filtering
+
+For real-time updates, WebSocket subscriptions support filters expressed as query parameters during connection or subscription.
+
+Example:
+
+Connecting to a chat channel filtered by a specific user ID:
+
+```ws
+wss://api.example.com/ws/chat?userId=user_123
+```
+
+This subscription ensures you receive only messages related to the specified user.
+
+---
+
+## Query Parameters Reference
+
+The following table summarizes common query parameters for pagination and filtering on REST endpoints.
+
+| Parameter | Type    | Required | Default | Description                         |
+|-----------|---------|----------|---------|-------------------------------------|
+| `page`    | integer | No       | `1`     | Page number starting from 1         |
+| `limit`   | integer | No       | `10`    | Number of items per page (max 100)  |
+| `category`| string  | No       | —       | Filter by product category           |
+| `search`  | string  | No       | —       | Text search filter on item names     |
+
+### Parameters Example for `/products` Endpoint
+
+```http
+GET https://api.example.com/v1/products?page=3&limit=5&category=toys
+X-API-Key: your_api_key
+```
+
+---
+
+## Using the API Playground for Pagination & Filtering
+
+You can experiment with pagination and filtering in the interactive API Playground embedded in the documentation. The playground allows live editing of query parameters, headers, request bodies, and authentication tokens.
+
+### Example: List Products with Pagination and Filters
+
+```mdx
+<APIPlayground
+  method="GET"
+  url="/products"
+  title="List Products"
+  description="Retrieve a paginated list of products filtered by category"
+  parameters={[
+    { name: "page", type: "number", description: "Page number for pagination", defaultValue: "1" },
+    { name: "limit", type: "number", description: "Items per page", defaultValue: "10" },
+    { name: "category", type: "string", description: "Category filter" }
+  ]}
+  authType="apiKey"
+  baseUrl="https://api.example.com/v1"
+/>
+```
+
+This playground lets you set the page, limit, and category parameters to see paginated, filtered results instantly.
+
+<Info>
+Make sure to supply a valid API key in the playground's authentication tab to access secured endpoints.
+</Info>
+
+---
+
+## Filtering and Pagination in WebSocket APIs
+
+While REST APIs address paginated retrieval for static datasets, WebSocket APIs deliver real-time streams. To prevent overload and focus on relevant events, support for filtering messages via connection query parameters and headers is critical.
+
+### Server-Side Filtering
+
+You can specify filters, such as subscribing only to certain channels, users, or message types during the WebSocket handshake by passing query parameters:
+
+```
+wss://api.example.com/ws/chat?channel=general&userId=user_456
+```
+
+### Real-Time Pagination Patterns
+
+Because WebSocket pushes data as it arrives, traditional pagination isn't applicable. Instead:
+
+- You rely on filtering to reduce message volume.
+- Clients can request historical data via REST endpoints with pagination.
+
+### Using the WebSocket Playground
+
+The WebSocket Playground lets you configure headers, subprotocols, and apply authentication while connecting to WebSocket channels. You can simulate filter parameters in the connection URL’s query string to test subscription filters.
+
+Example configuration in the playground:
+
+- URL: `/chat?channel=general&userId=user_456`
+- Auth type: Bearer Token or API Key
+- Custom headers or subprotocols as needed
+
+---
+
+## Best Practices & Tips
+
+- **Start with reasonable `limit` values** (e.g., 10–50) to avoid fetching too much data at once.
+- **Always include `page` and `limit`** parameters explicitly. Defaults may not always suit your needs.
+- **Use filtering** to minimize the data returned and reduce network load.
+- **Implement client-side caching** to improve UX when users navigate back and forth across pages.
+- **For real-time apps, combine REST pagination with WS filtering**: use REST APIs for initial loads and WS to get live updates relevant to your filtered scope.
+- **Watch for API throttling** when paginating: respect rate limits documented in [Rate Limiting & Quotas](../api-concepts-and-limits/api-rate-limiting).
+
+<Warning>
+Some filters may not be indexed and could impact response times. Test different combinations and consult endpoint-specific docs.
+</Warning>
+
+---
+
+## Troubleshooting Common Issues
+
+<AccordionGroup title="Common Pagination & Filtering Pitfalls">
+<Accordion title="Empty or Partial Results">
+- **Cause:** Incorrect or unsupported filter parameters.
+- **Solution:** Verify parameter names and values; check endpoint docs for allowed filters.
+- Use the API Playground to test filters interactively.
+</Accordion>
+<Accordion title="Unexpected Pagination Behavior">
+- **Cause:** Missing or invalid `page` or `limit` parameters.
+- **Solution:** Always specify valid integers for page and limit (e.g., page ≥ 1, limit between 1 and maximum allowed).
+- Inspect API response metadata (`total`, `page`, `limit`) to verify paging.
+</Accordion>
+<Accordion title="Authentication Errors">
+- **Cause:** Accessing secured endpoints without the proper API key or token.
+- **Solution:** Use correct authentication credentials (API key in header, Bearer token, etc.).
+- Test authentication in the API Playground before integrating.
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Related Documentation
+
+- [Authentication & Authorization](../rest-api/rest-authentication) — Learn how to authenticate API requests.
+- [Endpoints & Operations](../rest-api/rest-endpoints) — Detailed parameters and schemas for endpoints supporting pagination and filters.
+- [Rate Limiting & Quotas](../api-concepts-and-limits/api-rate-limiting) — Understand API usage limits impacting paginated requests.
+- [WebSocket Authentication](../websocket-apis/ws-auth) — How to authenticate real-time WebSocket connections.
+- [Channels & Real-Time Operations](../websocket-apis/ws-channels) — Learn message subscription and filtering in WebSocket channels.
+- [API Playground Demo](../api-playground-demo) — Interactive tool for experimenting with requests.
+
+---
+
+Harnessing pagination and filtering effectively unlocks smoother, scalable integrations with both RESTful and real-time APIs. Use this guide as your blueprint to handle large datasets confidently and deliver responsive, performant user experiences.
