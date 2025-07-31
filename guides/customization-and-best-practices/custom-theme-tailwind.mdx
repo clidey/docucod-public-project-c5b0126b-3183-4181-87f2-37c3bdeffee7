@@ -3,4 +3,253 @@ title: "Customizing Design with Tailwind & Theme Overrides"
 description: "Step through customizing the default visual style using Tailwind CSS and minimal theme tweaks. Make your documentation stand out by adjusting typography, colors, and component appearance."
 ---
 
-*This page will automatically be generated from the codebase*
+# Customizing Design with Tailwind & Theme Overrides
+
+Customize the visual style of your Dory documentation site to make it uniquely yours. This guide walks you through adjusting typography, colors, spacing, and key component appearances using Tailwind CSS and simple theme overrides. Whether you want a subtle tweak or a bold redesign, you’ll learn how to enhance your docs with minimal effort.
+
+---
+
+## 1. Overview
+
+### What This Guide Helps You Achieve
+You will learn how to modify the default styles of your Dory documentation project by:
+- Overriding Tailwind CSS configuration
+- Adding custom theme colors and fonts
+- Modifying component styles through minimal SCSS or utility classes
+- Maintaining consistent, responsive, and accessible design
+
+### Prerequisites
+- A working Dory project with development setup complete
+- Familiarity with Tailwind CSS basics (class utilities, configuration)
+- Access to your project’s root folder and ability to edit `tailwind.config.js` and stylesheets
+
+### Outcome
+By following this guide, your documentation will reflect your brand’s personality and improve readability and user engagement through tailored visual presentation.
+
+### Time Estimate
+15 to 30 minutes for basic customization
+
+### Difficulty Level
+Beginner to Intermediate (Tailwind CSS familiarity recommended)
+
+---
+
+## 2. Customization Workflow
+
+<Steps>
+<Step title="Step 1: Locate Tailwind Configuration">
+Your Tailwind settings reside in `tailwind.config.js` or `tailwind.config.ts` in the project root. This file controls global theme options like colors, fonts, breakpoints, and plugins.
+
+1. Open `tailwind.config.js`.
+2. Review the existing theme overrides under the `theme` key.
+
+> Example snippet:
+```js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#1D4ED8',
+        secondary: '#9333EA',
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
+    },
+  },
+}
+```
+
+This controls default blue and purple colors and uses the Inter font.
+
+</Step>
+<Step title="Step 2: Add or Modify Theme Colors">
+Tailor your color palette by extending or overriding colors.
+
+- Add brand colors under `extend.colors`
+- Use hex, RGB, or CSS color names
+
+> Example:
+```js
+extend: {
+  colors: {
+    brandBlue: '#0055FF',
+    brandOrange: '#FF7700',
+  },
+},
+```
+
+Use these in your MDX or components as utility classes like `text-brandBlue` or `bg-brandOrange`.
+
+Verify by running the dev server (`pnpm run dev`) and opening your site.
+
+</Step>
+<Step title="Step 3: Customize Typography">
+Modify typography for better branding or readability.
+
+- Add new fonts in `fontFamily`
+- Adjust font sizes, weights, line heights in the `theme.extend.typography` block (if using a typography plugin)
+
+For example, to use Google Fonts, add the font link in your `index.html` or via component:
+```html
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+```
+Then update your config:
+```js
+fontFamily: {
+  sans: ['Roboto', 'sans-serif'],
+},
+```
+Tailwind utilities like `font-sans`, `text-lg`, and `leading-relaxed` can then be used consistently.
+
+</Step>
+<Step title="Step 4: Override Component Styles">
+Dory uses SCSS along with Tailwind. You can override component styles by:
+
+- Editing `src/theme.scss` or adding a new style file
+- Using Tailwind’s `@apply` directive in SCSS for utility composition
+
+Example to change sidebar link color and hover:
+```scss
+.sidebar-link {
+  @apply text-brandBlue hover:text-brandOrange;
+}
+```
+This applies your new theme colors easily.
+
+You can also extend or create custom utility classes for spacing, shadows, rounded corners, etc.
+
+</Step>
+<Step title="Step 5: Apply Dark Mode Customizations">
+Dory supports dark mode using Tailwind’s dark variant.
+
+Customize colors in dark mode by extending your config:
+```js
+extend: {
+  colors: {
+    darkBg: '#121212',
+    darkText: '#E5E5E5',
+  },
+},
+```
+Use `.dark` prefix for your CSS classes, e.g., `dark:bg-darkBg dark:text-darkText`.
+
+Check the site by toggling dark mode to ensure the colors look consistent and readable.
+
+</Step>
+<Step title="Step 6: Rebuild and Preview">
+After making changes:
+1. Save your config and CSS/SCSS files.
+2. Run or restart the development server:
+
+```bash
+pnpm run dev
+```
+3. Open your docs site (usually at `http://localhost:3000`).
+4. Confirm your visual changes are correctly applied.
+
+If you use the production build:
+
+```bash
+pnpm run build
+pnpm run preview
+```
+
+This validates final styling before deployment.
+
+</Step>
+</Steps>
+
+---
+
+## 3. Practical Examples
+
+### Example: Change Primary Color and Font
+
+Modify `tailwind.config.js`:
+
+```js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#FF4500', // Bright orange
+      },
+      fontFamily: {
+        sans: ['"Open Sans"', 'sans-serif'],
+      },
+    },
+  },
+}
+```
+
+Add Open Sans font to your HTML header or via custom component:
+
+```html
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+```
+
+Use `text-primary` in your markdown or components to style headings and links.
+
+### Example: Customize Sidebar Link Hover
+
+In `src/theme.scss`:
+
+```scss
+.sidebar-link:hover {
+  @apply text-primary underline;
+}
+```
+
+This changes sidebar navigation links to your primary brand color on hover with an underline for improved feedback.
+
+---
+
+## 4. Troubleshooting & Tips
+
+<AccordionGroup title="Tips & Common Issues">
+<Accordion title="Why don't my Tailwind classes update after changes?">
+Ensure you have restarted the development server to pick up changes in `tailwind.config.js`.
+If using caching, try clearing `.vite` or `node_modules/.cache` folders.
+Check your IDE for any syntax errors in the config file.
+</Accordion>
+<Accordion title="How to add custom fonts properly?">
+Load fonts via `<link>` tags in the root HTML or your main layout component.
+Make sure font family names match those used in Tailwind config.
+Use browser developer tools to verify font loading.
+</Accordion>
+<Accordion title="Best practices for color contrast?">
+Always check your text and background colors meet accessibility contrast requirements.
+Use tools like [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/).
+Define separate colors for light and dark modes.
+</Accordion>
+<Accordion title="Can I add custom Tailwind plugins?">
+Yes, you can extend Tailwind by adding plugins in `tailwind.config.js` under `plugins`.
+Examples include typography, forms, or custom utility plugins.
+</Accordion>
+</AccordionGroup>
+
+---
+
+## 5. Next Steps & Related Documentation
+
+- **Organize Pages and Navigation with dory.json** — Customize site structure and navigation order ([Guide](https://example.com/guides/getting-started/organize-structure))
+- **Authoring Documentation in MDX** — Embed styled components and use Tailwind classes in your content ([Guide](https://example.com/guides/getting-started/write-mdx-content))
+- **Building the Static Site** — Prepare your styled documentation for production ([Guide](https://example.com/getting-started/first-run-validation/build-static-site))
+
+Explore these to leverage your customized theme fully and integrate design with content workflows.
+
+---
+
+## Summary
+This guide has equipped you to adjust the visual style of your Dory documentation using Tailwind CSS and minimal theme overrides. You learned how to modify colors, typography, component appearance, and dark mode styles, enhancing your docs’ brand identity and user appeal.
+
+Continue exploring Dory’s configuration and content authoring guides to build a fully customized, professional documentation site.
+
+---
+
+## Reference Links
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Dory Project on GitHub](https://github.com/clidey/dory)
+- [Dory Configuration Guide](https://example.com/getting-started/project-setup/configure-dory)
+- [Dory MDX Authoring Guide](https://example.com/guides/getting-started/write-mdx-content)
