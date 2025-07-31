@@ -3,4 +3,122 @@ title: "System Requirements"
 description: "Outlines all prerequisites to run Dory, including supported operating systems, Node.js and package manager versions, and any dependencies for local builds. Aimed at avoiding compatibility issues that could block installation."
 ---
 
-*This page will automatically be generated from the codebase*
+# System Requirements for Dory
+
+Welcome to the foundational guide on system requirements for running Dory, the lightweight static site generator for technical documentation. To ensure a smooth installation and optimal performance, this document outlines all necessary prerequisites, including supported operating systems, Node.js versions, package managers, and critical dependencies. Adhering to these requirements will prevent common compatibility issues and prepare you for a seamless documentation setup.
+
+---
+
+## 1. Supported Operating Systems
+
+Dory is designed to run on all major development platforms. Confirm your environment against the following supported OS versions:
+
+- **Windows:** Windows 10 or later
+- **macOS:** macOS 10.15 (Catalina) or later
+- **Linux:** Modern distributions with kernel 4.15+, including Ubuntu 18.04+, Debian 10+, Fedora 30+, and their derivatives
+
+> Ensure your system has the latest security patches and updates to avoid tooling issues.
+
+## 2. Required Node.js Version
+
+Dory depends on Node.js for all local builds and development server functionality. Use the following guidelines:
+
+- **Recommended Node.js Version:** 18.x or later
+- **Minimum Supported Version:** 16.x (though some features may be limited or unstable)
+
+### Verifying Your Node.js Version
+
+Run the following command in your terminal:
+
+```bash
+node -v
+```
+
+Expected output example for supported configuration:
+
+```
+v18.12.1
+```
+
+If your version is below 16.x, upgrade from the official [Node.js website](https://nodejs.org/) or using a version manager such as `nvm`.
+
+## 3. Supported Package Managers
+
+Dory’s development and dependency management currently require the **pnpm** package manager for optimal performance and compatibility.
+
+- **Supported:** pnpm (version 7.x or later)
+- **Not supported:** npm and yarn (due to pnpm-specific dependency resolutions)
+
+### Installing pnpm
+
+If pnpm is not installed, run:
+
+```bash
+npm install -g pnpm
+```
+
+### Verify pnpm installation
+
+```bash
+pnpm -v
+```
+
+Sample output:
+
+```
+7.20.0
+```
+
+## 4. Additional Dependencies & Tools
+
+For building and running Dory locally, ensure the following dependencies are met:
+
+- **Git:** To clone the repository and manage version control
+- **Modern Shell:** Bash, Zsh, or similar command-line shell for running commands
+- **Internet Access:** Required for fetching dependencies during installation
+
+Dory uses tools like Vite and TypeScript, which are installed as part of the project's dependencies via pnpm. No separate global installs are required for these.
+
+## 5. Hardware & Resource Recommendations
+
+While Dory is lightweight, the following minimum system specs help maintain an efficient local build and development experience:
+
+| Component       | Minimum          | Recommended          |
+|-----------------|------------------|---------------------|
+| CPU             | Dual-core 2.0GHz | Quad-core 2.5GHz+   |
+| Memory (RAM)    | 4 GB             | 8 GB or more        |
+| Disk Space      | 500 MB free      | 1 GB+ reserved 
+
+
+## 6. Network Requirements
+
+- Outbound HTTPS access to npm registry and GitHub is necessary for dependency installation.
+- No special firewall or proxy configuration is required for local usage unless behind restrictive corporate firewalls.
+
+
+## 7. Environment Variables
+
+Dory does not require special environment variables for basic operation.
+For advanced customization, consult the [Configure Dory (dory.json)](/getting-started/project-setup/configure-dory) page.
+
+## 8. Common Pitfalls & Tips
+
+- **Node.js Version Mismatch:** Installing the wrong Node.js version is the leading cause of build failures. Always verify with `node -v`.
+- **Using npm or Yarn:** Avoid npm or yarn in this project as they do not fully support pnpm workspace linking, which is essential here.
+- **Insufficient Memory:** Large documentation projects might slow down on machines with less than 4GB RAM.
+- **Outdated Git:** Ensure Git is updated to handle modern repository features.
+
+## 9. Next Steps
+
+Once your system meets these requirements, proceed to:
+
+- [Installing the CLI](/getting-started/prerequisites-installation/install-cli) to prepare your workspace
+- [Initialize Your Documentation Project](/getting-started/project-setup/create-project) to create your first site
+
+<Tip>
+Keeping your Node.js and pnpm versions up-to-date not only ensures compatibility but also improves security and build speed.
+</Tip>
+
+<Note>
+This page focuses exclusively on local development requirements. For building Docker images or deploying static sites, refer to the [Deployment & Portability](/overview/feature-overview/deployment-portability) guide.
+</Note>
