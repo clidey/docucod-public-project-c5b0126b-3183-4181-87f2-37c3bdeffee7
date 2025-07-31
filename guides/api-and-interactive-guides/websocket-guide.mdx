@@ -3,4 +3,283 @@ title: "Interactive WebSocket Guides Using AsyncAPI"
 description: "Document and provide hands-on demos of real-time workflows: integrate AsyncAPI specs, embed WebSocket playgrounds, and walk users through common messaging or presence update flows."
 ---
 
-*This page will automatically be generated from the codebase*
+# Interactive WebSocket Guides Using AsyncAPI
+
+Explore how to document and demonstrate real-time WebSocket workflows directly within your documentation using AsyncAPI specifications and the interactive WebSocket playground. This guide leads you through integrating AsyncAPI specs, embedding live WebSocket playground components, and walking users through common messaging and presence update scenarios.
+
+---
+
+## 1. Overview
+
+### What This Guide Does
+This page equips you to create hands-on, interactive WebSocket documentation pages that:
+
+- Integrate AsyncAPI specifications to describe websocket channels and messages.
+- Embed an interactive WebSocket playground allowing users to connect, configure, and test real-time WebSocket connections live.
+- Provide detailed message schemas, headers, examples, and flows for common real-time actions like chat messaging or presence updates.
+
+### Who This Is For
+Developers and documentation authors who want to deliver **engaging and practical** real-time API guides, enabling users to not only read about websocket channels but also experiment with live connections in an intuitive environment.
+
+### Outcomes You Will Achieve
+After following this guide, you will be able to:
+
+- Present AsyncAPI channel descriptions with rich message schemas.
+- Configure the WebSocket Playground with servers, subprotocols, headers, and authentication.
+- Walk users through sending and receiving messages with real-time feedback.
+- Enhance documentation with real examples and interactive demos that build user confidence.
+
+### Estimated Time to Implement
+~15–30 minutes to embed and customize per WebSocket channel or use case, depending on complexity.
+
+---
+
+## 2. WebSocket Playground Component: Core Features
+
+The central component supporting interactive WebSocket demos is the `WebSocketPlayground`. Key features include:
+
+- **Server Selection:** Choose among multiple WebSocket servers/endpoints.
+- **Connection Management:** Connect and disconnect with real-time status indicators (`Connected`, `Connecting`, `Disconnected`, `Error`).
+- **Message History:** View sent, received, error, and system messages with timestamps and message type color-coding.
+- **Message Sending:** Type and send messages, supporting enter key submission.
+- **Headers Tab:** Add, edit, or remove arbitrary WebSocket headers for customizing connection handshakes.
+- **Subprotocols Tab:** Manage subprotocols critical for specialized WebSocket communication (e.g., `chat`, `json`).
+- **Authentication Tab:** Support for none, bearer tokens, API keys, and basic auth with dynamic input fields.
+- **Error Handling:** Clear display and logging of connection or send errors.
+
+### Message Types Supported
+
+| Type     | Description                         | UI Indication                      |
+|----------|-----------------------------------|----------------------------------|
+| Sent     | Messages sent by the user          | Blue background, "Sent" label   |
+| Received | Messages received from server      | Green background, "Received" label|
+| Error    | Connection or send operation errors| Red background, "Error" label   |
+| System   | Status updates (connect/disconnect)| Gray background, "System" label |
+
+### Supported Authentication Types
+
+- None
+- Bearer Token
+- API Key
+- Basic Authentication (username/password)
+
+---
+
+## 3. Integrating AsyncAPI Specs
+
+### Using the AsyncAPI Component
+
+The `AsyncAPI` component is designed to render AsyncAPI JSON data, mapping channels and operations to the interactive playground.
+
+- It parses the AsyncAPI servers section to populate WebSocket server options.
+- Displays channel details like summary, description, message schemas, headers, and examples.
+- Supports both `subscribe` and `publish` operations for channels, showing appropriate message payloads.
+- Offers a "Try" button that launches the `WebSocketPlayground` with channel-specific configuration.
+
+### Workflow for Authors
+1. Provide AsyncAPI spec JSON to the `AsyncAPI` component with the current channel and operation (`subscribe` or `publish`).
+2. The component resolves message payloads and headers, displaying them as interactive properties.
+3. Users click "Try" to open a live WebSocket playground preconfigured to connect to the channel's WebSocket server.
+
+**Example:**
+
+```jsx
+<AsyncAPI asyncAPIJson={asyncApiJson} channel="/chat" operation="publish" />
+```
+
+This renders the chat channel's publish operation with message details and a playground ready to send chat messages.
+
+---
+
+## 4. Configuring the WebSocket Playground
+
+### Server Selection
+
+- Servers declared in the AsyncAPI spec populate the server dropdown.
+- Users can switch servers to test different environments (e.g., development, production).
+
+### Headers Configuration
+
+- Use the **Headers** tab to add or modify headers sent during the WebSocket handshake.
+- Add, edit, or delete headers as key-value pairs.
+- Headers automatically apply when connecting.
+
+### Subprotocols
+
+- In the **Subprotocols** tab, configure the list of subprotocols your connection requires.
+- Add or remove subprotocols to match server expectations (e.g., `chat.v1`, `json`).
+
+### Authentication
+
+- Select authentication type using the **Auth** tab dropdown.
+- Depending on the auth type, enter the required credentials:
+  - **Bearer Token:** Provide a token string.
+  - **API Key:** Provide the API key.
+  - **Basic Auth:** Enter username and password.
+- These credentials are injected into headers appropriately during connection.
+
+### Connecting
+
+- After configurations, click **Connect** to initiate the WebSocket.
+- Connection status updates in real time with a colored indicator and label.
+
+### Sending Messages
+
+- Input messages in the send message box.
+- Press **Send** button or Enter key.
+- Sent messages appear in the message history codified as "Sent" with timeline.
+
+### Viewing Messages
+
+- Incoming messages display as "Received".
+- Errors and system events appear in the history for transparency.
+
+### Clearing Messages
+
+- Use **Clear** button above the message pane to reset the message history.
+
+---
+
+## 5. Common Messaging Workflows Demonstrated
+
+### Real-time Chat
+
+- Connect to the `/chat` channel.
+- Publish chat messages and subscribe to receive messages.
+- Messages use a JSON schema matching the `ChatMessagePayload` with fields such as `content`, `userId`, `username`, and `timestamp`.
+
+### Presence Updates
+
+- Use the `/presence` channel for sending and receiving presence information like user online/offline status.
+- Examples include `status` updates and `lastSeen` timestamps.
+
+### Notifications
+
+- Subscribe to `/notifications` channel to receive system-triggered notifications.
+- Notifications include fields like `title`, `message`, `level`, and `timestamp`.
+
+### Examples
+
+Try sending JSON messages in the playground such as:
+
+```json
+{
+  "type": "chat",
+  "message": "Hello, WebSocket!",
+  "userId": "user123",
+  "timestamp": "2024-01-15T10:30:00Z"
+}
+```
+
+```json
+{
+  "type": "presence",
+  "status": "online",
+  "userId": "user123"
+}
+```
+
+```json
+{
+  "type": "notification",
+  "title": "Test Notification",
+  "message": "This is a test notification",
+  "level": "info"
+}
+```
+
+---
+
+## 6. Step-by-Step: Adding a WebSocket Guide Page
+
+<Steps>
+<Step title="Prepare AsyncAPI Specification">
+Create or obtain a valid AsyncAPI JSON spec describing your WebSocket servers, channels, and message payloads.
+</Step>
+<Step title="Add Documentation Page and Import AsyncAPI Component">
+Create an MDX file for your WebSocket guide and import the `AsyncAPI` component.
+</Step>
+<Step title="Render AsyncAPI Component for Target Channel and Operation">
+Render the component using props for your AsyncAPI JSON, the target channel path, and the operation (`subscribe` or `publish`).
+</Step>
+<Step title="Customize Message Details and Add Interactive Playground">
+Allow users to click the "Try" button to launch the embedded WebSocketPlayground configured for this channel.
+</Step>
+<Step title="Update Servers and Authentication Configurations">
+Ensure your AsyncAPI server entries are accurate to allow server selection in the playground, and configure any required authentication headers.
+</Step>
+<Step title="Test Your Guide Live">
+Run your documentation locally or deploy and verify users can connect, send, and receive WebSocket messages smoothly.
+</Step>
+</Steps>
+
+---
+
+## 7. Practical Tips & Best Practices
+
+- **Always provide meaningful server descriptions** in your AsyncAPI spec for clear user choices.
+- **Pre-populate headers and subprotocols** in the playground to mirror real-world connection requirements.
+- **Include detailed message example JSON** in your AsyncAPI `examples` to guide users on expected message structures.
+- **Use clear descriptions and titles** on AsyncAPI messages and channels to aid comprehension.
+- Leverage the **authentication tab smartly** to handle tokens and credentials without exposing sensitive data.
+- Encourage users to **start with simple messages**, progressively testing complex payloads.
+- Handle connection errors gracefully and give users clear next steps or common resolutions.
+
+---
+
+## 8. Troubleshooting
+
+### Connection Fails to Establish
+- Verify WebSocket server URLs and protocols are correct.
+- Confirm network connectivity and firewall rules allow WebSocket traffic.
+- Check authentication credentials and header configurations.
+
+### Messages Not Sending or Receiving
+- Confirm the WebSocket connection is in a "Connected" state.
+- Validate message format against schema; malformed JSON can be rejected.
+- Check the console or error messages in the playground for clues.
+
+### Authentication Errors
+- Double-check token/API key values.
+- Confirm server expects headers as configured.
+- Basic auth requires both username and password filled properly.
+
+### UI Does Not Update or Reflect State
+- Refresh the browser to reset the playground state.
+- Clear message history and reconnect.
+
+---
+
+## 9. Related Documentation & Next Steps
+
+- [AsyncAPI Specification Guide](https://www.asyncapi.com/docs/specifications/2.0.0)
+- [OpenAPI Integration for HTTP APIs](./openapi-integration)
+- [WebSocket Authentication Methods](../api-reference/websocket-apis/ws-auth)
+- [API Playground Demo for HTTP APIs](./api-playground-demo)
+- [WebSocket Playground Demo with Examples](./websocket-playground-demo)
+- [Creating Effective AsyncAPI Documentation](./asyncapi-best-practices)
+
+Explore these to deepen your understanding of interactive API documentation and real-time workflows.
+
+---
+
+## 10. Example: Embedding a WebSocket Playground for a Chat Channel
+
+```mdx
+import { AsyncAPI } from '../src/mdx/async-api'
+import asyncApiJson from '../docs/api-reference/asyncapi.json'
+
+<AsyncAPI asyncAPIJson={asyncApiJson} channel="/chat" operation="publish" />
+```
+
+This renders the chat channel's publishing interface with message schema and a button to open the live playground.
+
+---
+
+<Info>
+You are viewing the documentation for the WebSocket playground and AsyncAPI integration components. For HTTP API testing, refer to the OpenAPI playground guides.
+</Info>
+
+---
+
+**With this guide, you can seamlessly empower users to explore real-time WebSocket APIs interactively—bridging the gap between static documentation and dynamic user engagement.**
