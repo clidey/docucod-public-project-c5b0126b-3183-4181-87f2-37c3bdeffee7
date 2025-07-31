@@ -1,0 +1,378 @@
+---
+title: "Endpoints & Operations"
+description: "Browse all available REST API operations, complete with method definitions, input/output schemas, and real-world usage examples. Includes interactive 'Try It' playgrounds for GET, POST, PUT, and DELETE requests."
+---
+
+# Endpoints & Operations
+
+Explore all available REST API operations with detailed method definitions, input and output schemas, plus real-world usage examples. This page empowers you to interact directly with the API through our integrated 'Try It' playgrounds, supporting GET, POST, PUT, and DELETE requests for hands-on testing.
+
+---
+
+## Overview
+
+The Endpoints & Operations page serves as your central hub for discovering every REST API endpoint offered by the platform. Each API operation is presented with clear explanations, required parameters, request and response structures, and linked sample requests and responses.
+
+This practical view not only documents but enables you to validate functionality in real time, accelerating your development workflow with immediate feedback.
+
+---
+
+## API Interface and Base Configuration
+
+- **Base URL:** All REST API endpoints are accessed under the base URL `https://api.example.com/v1`.
+- **Authentication:** Each endpoint requires an API key passed in the HTTP header `X-API-Key` (see Authentication & Authorization guide for details).
+- **Content Type:** Requests and responses primarily utilize JSON (`application/json`).
+- **Endpoints Covered:** `GET /products`, `POST /products`, `GET /products/{id}`, `PUT /products/{id}`, `DELETE /products/{id}`.
+
+---
+
+## Authentication & Authorization
+
+The API secures all operations using API Key authentication. Include your API key in the `X-API-Key` header for every request. Without valid authentication, endpoints will return a `401 Unauthorized` response.
+
+For usage examples, token management, and security best practices, please refer to the [Authentication & Authorization](https://docs.example.com/api-reference/rest-api/rest-authentication) documentation.
+
+---
+
+## Endpoint Reference
+
+### List All Products
+
+- **Method:** GET
+- **URL:** `/products`
+
+Retrieve a paginated list of products with optional filtering by category.
+
+#### Query Parameters:
+
+| Name     | Type    | Required | Description                  | Default |
+|----------|---------|----------|------------------------------|---------|
+| page     | integer | No       | Page number (minimum 1)       | 1       |
+| limit    | integer | No       | Number of items per page (1-100) | 10      |
+| category | string  | No       | Filter products by category   | —       |
+
+#### Example Request:
+
+```http
+GET https://api.example.com/v1/products?page=1&limit=10&category=electronics
+X-API-Key: your_api_key_here
+Accept: application/json
+```
+
+#### Successful Response (200):
+
+```json
+{
+  "data": [
+    {
+      "id": "uuid-1234",
+      "name": "Smartphone",
+      "description": "Latest model smartphone",
+      "price": 699.99,
+      "category": "electronics",
+      "inStock": true,
+      "createdAt": "2024-01-10T08:00:00Z",
+      "updatedAt": "2024-01-12T10:00:00Z"
+    }
+  ],
+  "total": 42,
+  "page": 1,
+  "limit": 10
+}
+```
+
+#### Error Responses:
+- `401 Unauthorized` — Authentication missing or invalid.
+
+---
+
+### Create a New Product
+
+- **Method:** POST
+- **URL:** `/products`
+
+Add a new product to the catalog by providing essential details.
+
+#### Request Body (JSON):
+
+| Field       | Type     | Required | Description                  |
+|-------------|----------|----------|------------------------------|
+| name        | string   | Yes      | Product name                 |
+| description | string   | No       | Detailed product description |
+| price       | number   | Yes      | Product price (min 0)        |
+| category    | string   | Yes      | Product category             |
+| inStock     | boolean  | No       | Availability status          |
+
+#### Example Request:
+
+```http
+POST https://api.example.com/v1/products
+X-API-Key: your_api_key_here
+Content-Type: application/json
+
+{
+  "name": "Wireless Headphones",
+  "description": "Noise-cancelling over-ear headphones",
+  "price": 199.99,
+  "category": "electronics",
+  "inStock": true
+}
+```
+
+#### Successful Response (201):
+
+```json
+{
+  "id": "uuid-5678",
+  "name": "Wireless Headphones",
+  "description": "Noise-cancelling over-ear headphones",
+  "price": 199.99,
+  "category": "electronics",
+  "inStock": true,
+  "createdAt": "2024-01-15T11:00:00Z",
+  "updatedAt": "2024-01-15T11:00:00Z"
+}
+```
+
+#### Error Responses:
+- `400 Bad Request` — Invalid input data.
+- `401 Unauthorized` — Authentication missing or invalid.
+
+---
+
+### Get Product by ID
+
+- **Method:** GET
+- **URL:** `/products/{id}`
+
+Retrieve detailed information about a single product using its unique identifier.
+
+#### Path Parameter:
+
+| Name | Type   | Required | Description           |
+|------|--------|----------|-----------------------|
+| id   | string | Yes      | UUID of the product   |
+
+#### Example Request:
+
+```http
+GET https://api.example.com/v1/products/uuid-1234
+X-API-Key: your_api_key_here
+Accept: application/json
+```
+
+#### Successful Response (200):
+
+```json
+{
+  "id": "uuid-1234",
+  "name": "Smartphone",
+  "description": "Latest model smartphone",
+  "price": 699.99,
+  "category": "electronics",
+  "inStock": true,
+  "createdAt": "2024-01-10T08:00:00Z",
+  "updatedAt": "2024-01-12T10:00:00Z"
+}
+```
+
+#### Error Responses:
+- `404 Not Found` — Product with the specified ID does not exist.
+- `401 Unauthorized` — Authentication missing or invalid.
+
+---
+
+### Update Product
+
+- **Method:** PUT
+- **URL:** `/products/{id}`
+
+Modify details of an existing product. You can update any subset of the product fields.
+
+#### Path Parameter:
+
+| Name | Type   | Required | Description           |
+|------|--------|----------|-----------------------|
+| id   | string | Yes      | UUID of the product   |
+
+#### Request Body (JSON):
+
+Fields are all optional; include only those to update.
+
+| Field       | Type     | Description                  |
+|-------------|----------|------------------------------|
+| name        | string   | Product name                 |
+| description | string   | Product description          |
+| price       | number   | Price (min 0)                |
+| category    | string   | Product category             |
+| inStock     | boolean  | Stock availability           |
+
+#### Example Request:
+
+```http
+PUT https://api.example.com/v1/products/uuid-1234
+X-API-Key: your_api_key_here
+Content-Type: application/json
+
+{
+  "price": 649.99,
+  "inStock": false
+}
+```
+
+#### Successful Response (200):
+
+Updated product object reflecting changes.
+
+```json
+{
+  "id": "uuid-1234",
+  "name": "Smartphone",
+  "description": "Latest model smartphone",
+  "price": 649.99,
+  "category": "electronics",
+  "inStock": false,
+  "createdAt": "2024-01-10T08:00:00Z",
+  "updatedAt": "2024-01-20T09:30:00Z"
+}
+```
+
+#### Error Responses:
+- `404 Not Found` — Product not found.
+- `401 Unauthorized` — Authentication missing or invalid.
+
+---
+
+### Delete Product
+
+- **Method:** DELETE
+- **URL:** `/products/{id}`
+
+Remove a product permanently from the catalog.
+
+#### Path Parameter:
+
+| Name | Type   | Required | Description           |
+|------|--------|----------|-----------------------|
+| id   | string | Yes      | UUID of the product   |
+
+#### Example Request:
+
+```http
+DELETE https://api.example.com/v1/products/uuid-1234
+X-API-Key: your_api_key_here
+```
+
+#### Successful Response (204):
+
+No content; indicates successful deletion.
+
+#### Error Responses:
+- `404 Not Found` — Product not found.
+- `401 Unauthorized` — Authentication missing or invalid.
+
+---
+
+## API Playground – Interactive Exploration
+
+Every endpoint on this page is paired with an interactive playground where you can configure request parameters, headers, and body (if applicable), then execute live API calls directly from your browser.
+
+### Key Features:
+
+- **Dynamic Request Setup:** Modify query parameters, path variables, request headers, and JSON payloads.
+- **Authentication Support:** Easily select and provide your API key or other supported authentication credentials.
+- **Real-Time Response:** View full HTTP response details including status codes, headers, and formatted JSON data.
+- **Request Timing:** Understand API responsiveness by viewing request duration.
+- **Error Feedback:** Clear, detailed messages help troubleshoot failed requests.
+
+#### Example: Try Listing Products
+
+Use the playground's GET `/products` interface, set `page` to 1, `limit` to 5, and filter by category "electronics". Click **Send Request** to see live data instantly.
+
+<APIPlayground
+  method="GET"
+  url="/products"
+  title="List Products"
+  description="Retrieve paginated products with optional filters"
+  parameters={[
+    { name: "page", type: "number", description: "Page number for pagination", defaultValue: "1" },
+    { name: "limit", type: "number", description: "Items per page", defaultValue: "10" },
+    { name: "category", type: "string", description: "Filter by category" }
+  ]}
+  authType="apiKey"
+  servers={[{ url: "https://api.example.com/v1", description: "Production server" }]}
+/>
+
+---
+
+## Practical Tips & Best Practices
+
+- **Ensure API key is current and valid** before making requests to avoid authentication errors.
+- **Use pagination parameters** (`page` and `limit`) to manage large data sets effectively.
+- **Validate JSON body structure** in create and update requests to prevent `400 Bad Request` errors.
+- **Leverage the playground** to iterate on queries quickly before integrating calls into your code.
+- **Handle `404 Not Found` gracefully** by confirming correct product IDs.
+
+---
+
+## Troubleshooting Common Issues
+
+- **Unauthorized (401) Errors:** Double-check your `X-API-Key` header value, ensure no extra spaces, and verify key permissions.
+- **Bad Request (400) Errors:** Check JSON payload for syntax errors or missing required fields (`name`, `price`, `category`).
+- **Timeouts or Slow Responses:** Use pagination to request smaller data slices and monitor network stability.
+
+For deeper help, see [Error Handling & Status Codes](https://docs.example.com/api-reference/rest-api/rest-errors-status).
+
+---
+
+## Visualizing the API Flow
+
+```mermaid
+flowchart TD
+  A[User sends request to API] --> B[API Gateway at https://api.example.com/v1]
+  B --> C[Authenticate request using X-API-Key]
+  C -->|Valid| D[Route to appropriate service endpoint]
+  C -->|Invalid| E[Return 401 Unauthorized]
+  D --> F{HTTP Method}
+  F -->|GET /products| G[List products with pagination]
+  F -->|POST /products| H[Validate & create new product]
+  F -->|GET /products/{id}| I[Fetch product details]
+  F -->|PUT /products/{id}| J[Update product fields]
+  F -->|DELETE /products/{id}| K[Delete product]
+  G --> L[Return 200 with product list]
+  H --> M[Return 201 with created product]
+  I --> N[Return 200 with product info]
+  J --> O[Return 200 with updated product]
+  K --> P[Return 204 no content]
+  E --> Q[End]
+  L --> Q
+  M --> Q
+  N --> Q
+  O --> Q
+  P --> Q
+  Q[End Process]
+
+  classDef auth fill:#faa,stroke:#900;
+  class C auth;
+```
+
+---
+
+## Next Steps
+
+- Explore the [Authentication & Authorization](https://docs.example.com/api-reference/rest-api/rest-authentication) page to master securing your API calls.
+- Review [Error Handling & Status Codes](https://docs.example.com/api-reference/rest-api/rest-errors-status) for comprehensive guidance on API response management.
+- Use [Code Samples & SDK Integration](https://docs.example.com/api-reference/rest-api/rest-examples-sdks) to embed API calls in your applications.
+
+
+---
+
+## References
+
+- [What is Dory?](https://docs.example.com/overview/introduction-core-concepts/what-is-dory) — Understand the broader platform context.
+- [OpenAPI Integration Guide](https://docs.example.com/guides/api-and-interactive-guides/openapi-integration) — Learn how the API documentation and playground are generated.
+- [API Playground Demo](https://docs.example.com/docs/api-playground-demo) — Experience the playground with live HTTP examples.
+
+---
+
+Harness this endpoint guide to confidently build, test, and integrate with the REST API, all within Dory's streamlined documentation ecosystem.

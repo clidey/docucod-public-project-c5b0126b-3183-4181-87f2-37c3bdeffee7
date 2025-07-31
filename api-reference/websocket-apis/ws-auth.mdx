@@ -1,0 +1,219 @@
+---
+title: "WebSocket Authentication"
+description: "Understand how to authenticate your WebSocket connections: supported handshake mechanisms, typical headers, and maintaining secure, persistent sessions."
+---
+
+# WebSocket Authentication
+
+Secure your WebSocket connections by understanding supported handshake authentication mechanisms, typical headers, and how to maintain secure, persistent sessions. This guide focuses solely on authenticating WebSocket connections, enabling you to safely establish and manage real-time, bidirectional communication channels.
+
+---
+
+## 1. Overview of WebSocket Authentication
+
+WebSocket connections begin with a handshake similar to HTTP requests. During this handshake, authentication credentials are passed in headers to validate and authorize the client. Authentication protects your WebSocket endpoints from unauthorized access and helps maintain session integrity throughout the connection's lifetime.
+
+You can leverage multiple auth schemes depending on your security requirements and server configuration:
+
+- **Bearer Tokens (OAuth 2.0 compatible)**
+- **API Keys in custom headers**
+- **Basic Authentication (username and password encoding)**
+
+### Why Authenticate WebSocket Connections?
+
+Unlike stateless HTTP requests, WebSocket connections stay open and stateful, transmitting data over a single persistent channel. This makes initial authentication crucial, because once established, the server associates all messages with that authenticated session.
+
+Authentication also enables authorization scopes and permissions to apply in real-time communication scenarios.
+
+
+## 2. Supported Authentication Mechanisms
+
+### 2.1 Bearer Token Authentication
+
+The client sends an OAuth-style bearer token in the `Authorization` header during the handshake:
+
+```http
+Authorization: Bearer your_access_token_here
+```
+
+- Used for OAuth2 or JWT tokens.
+- Common in modern APIs requiring user or app identity verification.
+- The server validates the token before accepting the connection.
+
+### 2.2 API Key Authentication
+
+API keys can be sent as a custom header, typically:
+
+```http
+X-API-Key: your_api_key_here
+```
+
+- Straightforward for service-to-service communication.
+- Keys should be kept secret and rotated regularly.
+
+### 2.3 Basic Authentication
+
+Clients encode credentials and send them in the `Authorization` header:
+
+```http
+Authorization: Basic base64encoded(username:password)
+```
+
+- Suitable for simple credentials.
+- Should only be used over secure WebSocket (wss) connections to protect credentials.
+
+### 2.4 No Authentication
+
+Some WebSocket endpoints may be public and accept unauthenticated connections.
+
+
+## 3. Typical Authentication Flow in WebSocket Handshake
+
+1. **Connection Initialization:**
+   - Client initiates a WebSocket connection by sending a handshake HTTP Upgrade request.
+
+2. **Adding Authentication Headers:**
+   - Insert appropriate authentication headers (`Authorization`, `X-API-Key`, or others) in the handshake request.
+
+3. **Server Validation:**
+   - The server inspects authentication credentials before completing the handshake.
+   - If authentication fails, the server refuses the upgrade.
+
+4. **Connection Established:**
+   - Upon successful validation, the server upgrades the connection to a persistent WebSocket channel.
+
+5. **Session Maintenance:**
+   - Authentication is per connection; subsequent messages rely on the trust established during handshake.
+
+
+## 4. Configuring Authentication in the WebSocket Playground
+
+The Dory documentation includes an interactive WebSocket Playground offering an intuitive interface to configure and test authenticated WebSocket connections.
+
+### Key Features:
+
+- Select authentication type from **None**, **Bearer Token**, **API Key**, or **Basic Auth**.
+- Enter the bearer token, API key, or username/password credentials.
+- Add or modify custom headers.
+- Define subprotocols for specialized communication.
+- Choose from multiple WebSocket server endpoints.
+
+### How to Use Authentication Tabs:
+
+- **Auth Tab:** Pick your authentication scheme and supply necessary credentials.
+- **Headers Tab:** Review or add additional headers including auth headers.
+- **Subprotocols Tab:** Specify WebSocket subprotocols if required by your server.
+
+### Example: Bearer Token Setup
+
+1. Select **Bearer Token** in the Auth tab dropdown.
+2. Paste your token into the token input field.
+3. Verify `Authorization: Bearer <token>` shows up in the headers.
+4. Connect and monitor handshake success and messages.
+
+
+## 5. Best Practices for WebSocket Authentication
+
+- Always prefer **secure WebSocket (wss://)** to protect credentials and data during transport.
+- Use **Bearer tokens** or **API keys** over Basic Auth for stronger security and flexibility.
+- Keep tokens and keys confidential and rotate regularly.
+- Validate tokens server-side rigorously and support token revocation.
+- Use dedicated headers for authentication; avoid custom headers that might be stripped or blocked.
+- Monitor connection lifecycle events to detect unauthorized disconnects or errors.
+
+
+## 6. Common Pitfalls & Troubleshooting
+
+| Issue                                         | Cause & Solution                                                            |
+|-----------------------------------------------|-----------------------------------------------------------------------------|
+| Authentication header ignored or missing      | Ensure handshake requests include auth headers; proxies or middleware may strip them. Use secure and compatible headers. |
+| Connection refused due to auth failure        | Verify token/key validity, expiration, and server config for allowed credentials. |
+| Messages received without authentication info | Remember authentication occurs only during handshake; messages rely on connection trust. Reconnect with valid auth if needed. |
+| Using Basic Auth over `ws://` (non-secure)    | Switch to `wss://` to encrypt credentials and prevent interception. |
+
+
+## 7. WebSocket Authentication Example
+
+Here is a practical example of a client connecting to a WebSocket server with bearer token authentication:
+
+```javascript
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+const url = 'wss://api.example.com/ws/chat';
+const protocols = [];
+
+const headers = {
+  'Authorization': `Bearer ${token}`
+};
+
+// Most browsers don't allow setting custom headers directly on WebSocket,
+// but in environments supporting it (e.g., Node.js), you can pass headers.
+// Alternatively, pass tokens as query params or subprotocols if server supports.
+
+const ws = new WebSocket(url, protocols);
+
+ws.onopen = () => {
+  console.log('Connected with Bearer token');
+};
+
+ws.onmessage = (event) => {
+  console.log('Received:', event.data);
+};
+
+ws.onerror = (error) => {
+  console.error('WebSocket error:', error);
+};
+
+ws.onclose = () => {
+  console.log('Connection closed');
+};
+```
+
+
+## 8. Maintaining Secure Persistent Sessions
+
+Once authenticated via the initial handshake, maintain session security by:
+
+- Handling unexpected disconnects gracefully and re-authenticating on reconnect.
+- Avoid sending sensitive info in messages; authentication is a one-time handshake step.
+- Implement server-side session expiration for inactive connections.
+- Log and monitor authentication and connection status for anomalies.
+
+
+## 9. Related Documentation
+
+- [WebSocket Playground & Examples](/api-reference/websocket-apis/ws-playground): Interactive tool for testing WebSocket connections.
+- [OpenAPI Integration Guide](/guides/api-and-interactive-guides/openapi-integration): For HTTP API authentication.
+- [AsyncAPI WebSocket Interactive Guide](/guides/api-and-interactive-guides/websocket-guide): Deep dive into real-time API design and usage.
+- [Authentication & Authorization (REST API)](/api-reference/rest-api/rest-authentication): Detailed auth methods for HTTP APIs.
+
+
+---
+
+By following these authentication methods and best practices, you ensure your WebSocket connections are protected at handshake and maintain secure, reliable communication channels throughout your real-time application workflows.
+
+
+---
+
+## Appendix: WebSocket Handshake Authentication Diagram
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant Server
+
+  Client->>Server: HTTP Upgrade Request + Auth Headers
+  activate Server
+  Server-->>Client: HTTP 101 Switching Protocols (if auth success)
+  deactivate Server
+
+  Client->>Server: WebSocket Connection Established
+  Server->>Client: Accept & maintain session
+
+  Client->>Server: Send messages over authenticated session
+  Server->>Client: Receive messages over authenticated session
+
+  Note right of Server: Validate auth at handshake only
+  Note left of Client: Resend auth on reconnect if needed
+```
+
+---

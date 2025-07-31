@@ -1,0 +1,165 @@
+---
+title: "Security Hardening"
+description: "Best practices for securing your static documentation deployment—lock down HTTP headers, minimize attack surface, restrict asset upload, and use security policies for Docker and Nginx."
+---
+
+# Security Hardening
+
+Ensuring the security of your Dory static documentation deployment is vital to protect your content, maintain user trust, and prevent unauthorized access or attacks. This guide walks you through best practices tailored specifically for securing your static documentation site served via common deployment methods such as Docker and Nginx.
+
+---
+
+## 1. Strengthen HTTP Security Headers
+
+Proper HTTP headers reinforce your deployment's defenses by controlling browsers' security behaviors. Configure your web server (e.g., Nginx) or CDN to enforce these headers:
+
+- **Content-Security-Policy (CSP):** Limit sources for scripts, styles, and images to trusted origins only. For Dory static sites, enforce loading of local resources and trusted CDNs.
+- **X-Content-Type-Options:** Set to `nosniff` to prevent MIME type sniffing attacks.
+- **X-Frame-Options:** Use `DENY` or `SAMEORIGIN` to block clickjacking by preventing your docs from being loaded in iframes.
+- **Strict-Transport-Security (HSTS):** Enforce HTTPS connections.
+- **Referrer-Policy:** Control how much referrer information is sent.
+- **Permissions-Policy:** Disable or restrict browser features that are not needed.
+
+### Example: Nginx HTTP Headers Configuration
+```nginx
+add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" always;
+add_header X-Content-Type-Options nosniff always;
+add_header X-Frame-Options DENY always;
+add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+add_header Referrer-Policy no-referrer-when-downgrade always;
+add_header Permissions-Policy "geolocation=(), microphone=()" always;
+```
+
+> Configure these headers early in your deployment pipeline for comprehensive security.
+
+<Note>
+Always test your CSP thoroughly to avoid breaking functionality, especially if embedding external scripts or styles.
+</Note>
+
+---
+
+## 2. Minimize Attack Surface
+
+Since Dory produces fully static sites, the attack surface is naturally reduced. However, to maximize security:
+
+- **Serve only static files:** Avoid enabling server-side scripting or dynamic features on your hosting platform.
+- **Disable directory listing:** Ensure your web server prevents listing files if an index file is missing.
+- **Limit HTTP methods:** Only `GET` and `HEAD` should be allowed; disable `PUT`, `POST`, `DELETE`, and others.
+
+### Nginx Minimal Exposure Example
+```nginx
+location / {
+  try_files $uri $uri/ =404;
+  limit_except GET HEAD {
+    deny all;
+  }
+}
+```
+
+- **Keep software up to date:** Regularly update your web server, Docker images, and related dependencies.
+
+---
+
+## 3. Secure Asset Upload and Storage
+
+While static sites generally do not accept uploads, ensure any deployment that allows asset uploads or edits enforces strict controls:
+
+- **File type restrictions:** Accept only safe static file types (`.html`, `.css`, `.js`, `.svg`, `.png`, `.jpg`, `.mdx`).
+- **Sanitize file names:** Prevent injection or path traversal attacks through uploaded filenames.
+- **Validate inputs if applicable:** For example, if using CI/CD pipelines that accept input.
+
+<Warning>
+Never expose administrative interfaces or asset upload endpoints to the public internet without strong authentication and authorization.
+</Warning>
+
+---
+
+## 4. Docker Security Best Practices
+
+If deploying with Docker (see [Deploying with Docker](/deployment/docker-cloud/docker-image-build)):
+
+- **Use official or minimal base images:** The official Dory Docker images are optimized and hardened.
+- **Run containers as non-root user:** Avoid running your container with root privileges.
+- **Limit container capabilities:** Drop unnecessary Linux capabilities.
+- **Use read-only filesystem:** Mount your static content directory as read-only inside the container.
+- **Network isolation:** Use custom Docker networks to isolate containers.
+- **Secrets management:** Pass environment variables securely using Docker secrets or orchestration tools.
+
+### Example Docker Run Command for Security
+```bash
+docker run --rm -d \
+  -p 8080:80 \
+  --read-only \
+  --user 1000:1000 \
+  --restart unless-stopped \
+  your-dory-image
+```
+
+<Check>
+Ensure your Dockerfiles and compose files adopt these security principles to limit exposure.
+</Check>
+
+---
+
+## 5. Nginx Security Policies for Serving Static Sites
+
+Configuring Nginx properly is essential to balancing security with reliable static content delivery.
+
+### Recommended Nginx Config Highlights:
+
+- **Disable server tokens:** Hide Nginx version for security through obscurity.
+- **Cache static assets safely:** Use strong caching headers (`Cache-Control`) without exposing sensitive data.
+- **Strict TLS:** Use modern TLS configurations and strong ciphers.
+- **Limit request size:** Prevent resource exhaustion by setting `client_max_body_size 0;` if uploads are not expected.
+
+### Sample Nginx Security Snippet
+```nginx
+server_tokens off;
+client_max_body_size 0;
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_prefer_server_ciphers on;
+ssl_ciphers 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-AES128-GCM-SHA256';
+```
+
+---
+
+## 6. Continuous Security Maintenance
+
+Security is an ongoing commitment:
+
+- **Regularly audit your deployment:** Use automated tools to scan for vulnerabilities.
+- **Monitor logs:** Set up logging and alerts for suspicious access patterns.
+- **Automate updates:** Incorporate security patches into your CI/CD pipeline.
+- **Backup configurations:** Keep secure backups of your static assets and configurations.
+
+<Info>
+For deployment-specific operational guidance, consult the [Monitoring and Logging](/deployment/operations-optimization/monitoring-logging) and [Backup and Disaster Recovery](/deployment/operations-optimization/backup-disaster-recovery) documentation.
+</Info>
+
+---
+
+## 7. Summary Checklist for Secure Deployment
+
+- [ ] Configure strict HTTP security headers
+- [ ] Disable directory listing and unwanted HTTP methods
+- [ ] Serve only static files with validated content
+- [ ] Harden Docker containers with least privilege and read-only filesystems
+- [ ] Apply tight Nginx TLS and security settings
+- [ ] Enforce regular updates and monitoring
+
+Adhering to these security hardening principles ensures your Dory documentation site delivers knowledge reliably and securely.
+
+---
+
+For deployment workflows and example setups, see also:
+
+- [Deploying with Docker](/deployment/docker-cloud/docker-image-build)
+- [Serving Static Files](/deployment/getting-started-production/serving-static-files)
+- [Monitoring and Logging](/deployment/operations-optimization/monitoring-logging)
+- [Backup and Disaster Recovery](/deployment/operations-optimization/backup-disaster-recovery)
+
+By following these practices, you fortify your documentation site against common web threats while maintaining seamless access and excellent performance.
+
+---
+
+_End of Security Hardening Guide_

@@ -1,0 +1,213 @@
+---
+title: "Serving Static Files"
+description: "Explore best practices for serving the generated static site with popular options including Nginx, simple HTTP servers, and Dockerized environments. Includes how to use the built-in CLI and Docker previews."
+---
+
+# Serving Static Files
+
+Explore best practices for serving your generated static Dory documentation site using reliable, popular options including Nginx, simple HTTP servers, and Dockerized environments. This guide helps you seamlessly deploy the static output of your Dory build, improve performance, and streamline previews using the CLI and Docker.
+
+---
+
+## 1. Understanding the Static Site Output
+
+When you run the Dory build process (`node bin/dory.js build` or `pnpm run build`), it generates a fully static site inside a `dist/` directory by default. This directory contains the HTML, CSS, JavaScript, and assets necessary to serve your documentation with no runtime dependencies on Node.js or any backend server.
+
+The static site is optimized for fast loading and client-side rendering using Preact and Vite enhancements. Your goal in deployment is to serve the files efficiently over HTTP from a suitable web server or containerized environment.
+
+
+## 2. Serving with Nginx
+
+Nginx is a widely adopted high-performance web server and reverse proxy ideal for serving static files in production.
+
+### 2.1 Basic Configuration for Static File Hosting
+
+To serve the Dory static site, configure an Nginx `server` block with the `root` set to the path of your built `dist/` directory:
+
+```nginx
+server {
+  listen 80;
+  server_name your-domain.com;
+
+  root /path/to/dist;
+  index index.html index.htm;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}
+```
+
+**Explanation:**
+
+- `root`: Points to the folder containing your built files.
+- `try_files`: Allows client-side routing by redirecting unknown paths to `index.html`, essential for SPA behavior.
+
+### 2.2 Best Practices
+
+- Enable gzip compression in Nginx to reduce file sizes for transfer.
+- Set cache headers wisely (static assets can be cached aggressively).
+- Use HTTPS with SSL certificates for secure connections.
+
+### 2.3 Common Pitfalls
+
+- Forgetting the `try_files` directive will cause 404 errors on client-side routed paths.
+- Not updating the `root` path correctly can prevent files from loading.
+
+
+## 3. Using Simple HTTP Servers for Local Preview or Lightweight Deployment
+
+For quick previews or lightweight serving (e.g., testing or demos), the built-in Dory CLI and simple HTTP servers are sufficient.
+
+### 3.1 Built-in CLI Preview Command
+
+After building the site, run:
+
+```bash
+node bin/dory.js preview
+```
+
+or with the convenience script:
+
+```bash
+pnpm run preview
+```
+
+This starts a local HTTP server serving the static site on a default port (usually 4173 or similar) with live reloading for local testing.
+
+### 3.2 Node.js `http-server`
+
+Alternatively, use [`http-server`](https://www.npmjs.com/package/http-server) for simple static file serving:
+
+```bash
+npx http-server dist/ -p 8080
+```
+
+This lightweight server is ideal for local validation or sharing a quick demo.
+
+### 3.3 Python Simple HTTP Server
+
+If you have Python installed, you can serve files easily:
+
+```bash
+cd dist
+python3 -m http.server 8080
+```
+
+
+## 4. Dockerized Static File Serving
+
+Containerizing your static site provides portability and consistency across environments.
+
+### 4.1 Official Dory Docker Image Preview
+
+You can run the official Dory Docker image to preview your built site:
+
+```bash
+docker run -p 4173:4173 -v $(pwd)/dist:/app/dist clidey/dory:latest node bin/dory.js preview
+```
+
+This mounts your local `dist` directory inside the container and serves it.
+
+### 4.2 Serving with an Nginx Docker Container
+
+To deploy the static site in production using Docker, build an Nginx-based image:
+
+1. Create a `Dockerfile`:
+
+```dockerfile
+FROM nginx:alpine
+COPY dist/ /usr/share/nginx/html/
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+```
+
+2. Use the sample `nginx.conf` from Section 2 with the `root` directive pointing to `/usr/share/nginx/html`.
+
+3. Build and run the container:
+
+```bash
+docker build -t dory-docs .
+docker run -p 80:80 dory-docs
+```
+
+### 4.3 Tips for Docker Deployment
+
+- Use multi-stage builds if you want to build the Dory site inside the container.
+- Always specify explicit versions for base images for reproducibility.
+
+
+## 5. Configuration Options With the CLI
+
+The Dory CLI provides commands and flags to customize the serving behavior.
+
+### 5.1 Build Command
+
+```bash
+node bin/dory.js build --outDir custom-dist
+```
+
+Change output directory for your static files.
+
+### 5.2 Preview Command
+
+```bash
+node bin/dory.js preview --port 3000
+```
+
+Starts a preview server on the specified port.
+
+### 5.3 Using with Docker
+
+You can pass CLI flags to the Docker run command for custom behavior:
+
+```bash
+docker run -p 3000:3000 clidey/dory:latest node bin/dory.js preview --port 3000
+```
+
+
+## 6. Summary: Recommended Workflows
+
+| Scenario              | Recommended Approach                               | Notes                          |
+|-----------------------|---------------------------------------------------|--------------------------------|
+| Local Development     | `pnpm run dev`                                    | Hot reload, fast iteration      |
+| Local Build Preview    | `pnpm run build` + `pnpm run preview`             | Quick validation of production build |
+| Lightweight Serving   | Serve `dist` with `http-server` or Python HTTP    | Good for demos and local share  |
+| Production Deployment | Serve static files with Nginx or equivalent server | Use Docker for portability     |
+
+
+## 7. Troubleshooting Common Issues
+
+### 7.1 Files Not Loading / 404 Errors
+
+- Verify that the web server’s `root` or base directory points correctly to your built `dist` folder.
+- Confirm the `try_files` setting in Nginx to ensure SPA routing works.
+
+### 7.2 Blank Pages or Broken Styles
+
+- Check that the build completed successfully and all static assets exist.
+- Clear browser cache to avoid stale JavaScript or CSS.
+
+### 7.3 Docker Issues
+
+- Ensure volume mounts are correctly mapping your local static files.
+- Confirm network ports are exposed and mapped properly.
+
+
+## 8. Additional Resources
+
+- [Nginx Documentation: Serving Static Content](https://nginx.org/en/docs/http/serving_static_content.html)
+- [http-server npm package](https://www.npmjs.com/package/http-server)
+- [Dory CLI Usage (`bin/dory.js`)](https://github.com/clidey/dory/blob/main/bin/dory.js)
+- [Docker Official Nginx Image](https://hub.docker.com/_/nginx)
+
+---
+
+Deploying your static Dory site with these best practices ensures optimal performance, portability, and reliability, whether serving locally for quick previews or running at scale in production with Docker and Nginx.
+
+Leverage the built-in CLI preview for rapid testing and turn to containerized solutions for consistent environments across teams and hosts.
+
+For guidance on building the static site before deployment, see the [Building the Static Site](../getting-started-production/building-static-site) page.
+
+Use the [Deploying with Docker](../../docker-cloud/docker-image-build) page for advanced container deployment strategies and the [Deployment & Portability](../../feature-overview/deployment-portability) overview for a broader perspective on hosting options.
+
+---

@@ -1,0 +1,137 @@
+---
+title: "Quick Validation Checklist"
+description: "Provides a short list of checks to confirm that Dory is successfully installed, documentation is rendering, and site navigation is functional. Ensures users can confidently move forward."
+---
+
+# Quick Validation Checklist
+
+This checklist provides a concise set of steps to quickly confirm that your Dory setup is working correctly. Completing these checks ensures your installation is successful, your documentation is rendering as expected, and navigation functions properly so you can confidently proceed to the next stages of your documentation project.
+
+---
+
+## 1. Confirm Dory Installation and CLI Functionality
+
+- Open your terminal.
+- Run the following command to verify the `dory` CLI is installed and accessible:
+
+```bash
+  dory --version
+```
+
+- **Success:** You should see the installed Dory version printed.
+- **If not:** Revisit the [Installing the CLI]( /getting-started/prerequisites-installation/install-cli) guide to complete setup.
+
+---
+
+## 2. Verify Your Project Structure and Configuration
+
+- Confirm you have a `docs/` directory at the root of your project.
+- Ensure a valid `dory.json` configuration file is present.
+- Quick check:
+
+```bash
+  ls docs
+dory.json
+```
+
+- Open `dory.json` and verify your navigation tabs, groups, and pages are correctly defined.
+
+- **Tip:** Run:
+
+```bash
+  cat dory.json
+```
+
+and look for expected contents.
+
+- For details, see [Configure Dory (dory.json)](/getting-started/project-setup/configure-dory).
+
+---
+
+## 3. Run the Development Server
+
+- Start the local development server:
+
+```bash
+  pnpm run dev
+```
+
+- Observe console output:
+  - Server should start on `http://localhost:5173` (default port).
+  - No errors or crashes.
+
+- Open the shown URL in your browser.
+
+- **Success:** Your documentation site loads, showing navigation and content.
+
+---
+
+## 4. Verify Documentation Page Rendering
+
+- Browse through several pages from your site navigation.
+- Confirm that:
+  - Markdown/MDX content renders correctly.
+  - Code blocks, headings, and images display as expected.
+  - Navigation tabs, groups, and pages are present and usable.
+
+- **Tip:** Check the developer console (F12) for any rendering errors.
+
+---
+
+## 5. Validate Site Navigation
+
+- Click on navigation links (tabs, groups, pages).
+- Confirm:
+  - Page content updates without errors.
+  - URL changes correspondingly.
+  - The active navigation item is visually highlighted.
+
+- If navigation is broken:
+  - Verify your `dory.json` reflects the correct paths.
+  - Check that corresponding `.mdx` files exist inside `docs/`.
+
+---
+
+## 6. Confirm Static Site Build (Optional but Recommended)
+
+- Run the build command:
+
+```bash
+  pnpm run build
+```
+
+- Confirm no build errors.
+- Preview the static site:
+
+```bash
+  pnpm run preview
+```
+
+- Verify the site loads and functions correctly in preview, identical to the development server.
+
+- This step ensures the production build is valid and ready for deployment.
+
+---
+
+## Troubleshooting Quick Tips
+
+- If `dory` command fails, verify Node.js and `pnpm` installations as per [System Requirements](/getting-started/prerequisites-installation/system-requirements).
+- If dev server fails on port 5173, check for port conflicts and kill conflicting processes.
+- If pages show 404 or navigation is incomplete, verify that `docs/` files and `dory.json` navigation are in sync.
+- Clear browser cache or try incognito mode to avoid stale data.
+
+---
+
+## What’s Next?
+
+After completing this checklist successfully:
+
+- Start adding and customizing your documentation content ([Add & Structure Documentation Content](/getting-started/project-setup/add-docs)).
+- Learn to build and deploy your static site for production ([Build and Serve the Static Site](/getting-started/first-run-validation/build-static-site)).
+- Explore advanced usage and interactive features in [Guides]( /guides/getting-started/quickstart-workflow).
+
+---
+
+<Tip>
+Keep this checklist handy as a quick health check during your documentation project setup and ongoing work to ensure smooth progress.
+</Tip>

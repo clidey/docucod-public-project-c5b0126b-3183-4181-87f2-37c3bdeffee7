@@ -1,0 +1,195 @@
+---
+title: "Document and Test HTTP APIs with OpenAPI"
+description: "Guide to importing OpenAPI specs, rendering API reference pages, and enabling the interactive HTTP client — so users can explore, execute, and learn from live API endpoints as part of your documentation."
+---
+
+# Document and Test HTTP APIs with OpenAPI
+
+Explore how to import OpenAPI specifications, present rich API reference documentation, and enable an interactive HTTP client right within your docs. This guide walks you through using Dory to parse OpenAPI specs, render endpoint details, and empower users to try out live API requests seamlessly.
+
+---
+
+## Workflow Overview
+
+### Task Description
+This guide helps you import your OpenAPI (Swagger) specs into Dory-powered documentation, automatically generate detailed API reference pages, and provide an interactive API playground so users can explore, test, and learn from your HTTP endpoints.
+
+### Prerequisites
+- An OpenAPI-compliant JSON specification file (`openapi.json`) structured according to OpenAPI version 3.x.
+- Basic familiarity with OpenAPI concepts such as paths, methods, parameters, request bodies, and responses.
+- A Dory documentation project with access to MDX pages and ability to configure navigation.
+
+### Expected Outcome
+By following this guide, you will have:
+- Imported an OpenAPI spec and linked it to a documentation page.
+- Generated structured API reference pages displaying endpoints, parameters, payloads, and responses.
+- Enabled an embedded interactive HTTP client to send live requests and see real responses.
+
+### Time Estimate
+Approximately 15-30 minutes depending on specification complexity.
+
+### Difficulty Level
+Intermediate — requires understanding of API specification and documentation structure.
+
+---
+
+## Step-by-Step Instructions
+
+### 1. Place Your OpenAPI Spec
+
+- Add your OpenAPI JSON file (e.g., `openapi.json`) inside your documentation project, typically within the `docs` directory.
+- Organize it near related documentation pages for easier navigation.
+
+### 2. Reference the OpenAPI Spec in Your MDX Page
+
+- In your documentation page's frontmatter (YAML at the top), add an `openapi` field referencing the HTTP method and path you want to document, for example:
+
+```yaml
+---
+openapi: "POST /plants"
+---
+```
+
+- Dory will automatically detect and load the OpenAPI spec from the relative path to this page and link the method and path.
+
+### 3. Render the API Reference Page
+
+- The page will display:
+  - Endpoint overview with the HTTP method, path, and description.
+  - Parameter lists including path, query, header parameters with types, descriptions, and indication of required fields.
+  - Request body schema structured by properties, indicating types, defaults, and required fields.
+  - Response schemas for various status codes, showing the JSON structure.
+  - Schemas/components excerpted from the spec for detailed data models.
+
+### 4. Enable the Interactive API Playground
+
+- The reference page includes a "Try" button which opens the embedded API playground in a slide-over panel.
+- Users can modify parameters, headers, and the request body.
+- Support for multiple authentication methods (Bearer token, API key, Basic auth) is included.
+- Users send live HTTP requests directly from the docs.
+- The playground shows real-time response status, headers, timing, and formatted JSON response body.
+
+### 5. Customize the Playground (Optional)
+
+- You can pass additional parameters such as default headers, authentication type, and server URLs to configure the playground's initial state.
+
+---
+
+## Practical Examples
+
+### Example MDX Frontmatter with OpenAPI Reference
+
+```markdown
+---
+title: "Create Plant"
+description: "Create a new plant entry in the system"
+openapi: "POST /plants"
+---
+
+# Create Plant
+
+Use this page to view the API details and send a test request.
+```
+
+### Sample Generated API Reference Sections
+
+- **Parameters**
+
+| Name       | Type     | Required | Description                   |
+|------------|----------|----------|-------------------------------|
+| `id`       | string   | Yes      | Unique plant identifier       |
+| `species`  | string   | Yes      | Species name                  |
+
+- **Request Body**
+
+```json
+{
+  "name": "string",
+  "species": "string",
+  "age": 5
+}
+```
+
+- **Response Example**
+
+```json
+{
+  "id": "123",
+  "name": "Fern",
+  "species": "Pteridophyta",
+  "createdAt": "2024-01-01T12:00:00Z"
+}
+```
+
+### Using the API Playground UI
+
+- Click the **Try** button on the API reference page.
+- Adjust parameters, headers, or the JSON request body as needed.
+- Select authentication type and fill credentials if applicable.
+- Click **Send Request** to execute.
+- Review status code, response headers, and response body dynamically shown.
+
+---
+
+## Troubleshooting & Tips
+
+### Common Issues
+
+- **OpenAPI Spec Not Found or Invalid**
+  - Ensure your OpenAPI spec is valid JSON and placed correctly inside the `docs` directory.
+  - Make sure the `openapi` frontmatter field correctly references the method and path in the spec.
+
+- **Playground Not Loading or Fails to Send Requests**
+  - Verify the server URLs in your OpenAPI spec or playground configuration are accessible.
+  - Check browser console for CORS errors or network blockages.
+
+- **Parameter or Schema Rendering Looks Incorrect**
+  - Confirm schema references (`$ref`) in OpenAPI are valid and correctly resolved.
+  - Check for correct typing of request and response schemas.
+
+### Best Practices
+
+- Keep the OpenAPI spec concise and organized; avoid unnecessary duplication.
+- Use descriptive titles and summaries in your OpenAPI paths and components for clarity.
+- Provide sensible default values for parameters when possible to enhance playground usability.
+- Test your endpoints standalone before linking them to your documentation.
+
+### Performance Considerations
+
+- Large OpenAPI specs can slow down page rendering; consider splitting specs or lazy loading.
+
+### Alternative Approaches
+
+- For WebSocket APIs, use the AsyncAPI integration page for real-time message playgrounds.
+
+---
+
+## Next Steps & Related Content
+
+- Explore the [WebSocket Playground & AsyncAPI](https://your-docs-url/guides/api-and-interactive-guides/websocket-guide) page to document real-time WebSocket APIs.
+- Learn how to [Organize Pages and Navigation](https://your-docs-url/guides/getting-started/organize-structure) to integrate your API docs smoothly.
+- For deeper customization, check out the configuration guide on [Dory Configuration (dory.json)](https://your-docs-url/getting-started/project-setup/configure-dory).
+- Try the [API Playground Demo](https://your-docs-url/docs/api-playground-demo) page for hands-on examples.
+
+---
+
+<AccordionGroup title="Code Examples and Components Used">
+<Accordion title="OpenAPI React Component">
+This component parses an OpenAPI JSON spec, extracts method and path information, and renders the API documentation including parameters, request bodies, responses, and schemas. It also includes a button to open the interactive API playground.
+</Accordion>
+<Accordion title="API Playground Component">
+Provides the interactive HTTP client UI with tabs for parameters, headers, body, and auth. It supports request configuration editing, sends real HTTP requests, and displays response details.
+</Accordion>
+</AccordionGroup>
+
+<Tip>
+Use the `<APIPlayground />` component to embed interactive API testing anywhere in your MDX documentation for richer user engagement.
+</Tip>
+
+<Check>
+Ensure your OpenAPI file is valid by using online validators such as https://apitools.dev/swagger-parser/online/ or https://editor.swagger.io/ before adding to Dory.
+</Check>
+
+<Note>
+The playground supports Bearer, API Key, Basic Auth, or no authentication. Ensure your API supports CORS for browser-based testing.
+</Note>

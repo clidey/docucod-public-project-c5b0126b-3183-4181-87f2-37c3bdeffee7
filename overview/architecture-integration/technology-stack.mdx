@@ -1,0 +1,149 @@
+---
+title: "Technology Stack"
+description: "A quick breakdown of the frameworks and libraries that power Dory, including Preact, Vite, Tailwind CSS, Mermaid, and TypeScript. Understand why these technologies were chosen and how they contribute to performance and developer experience."
+---
+
+# Technology Stack
+
+## Unlocking Performance and Developer Experience
+
+Dory is powered by a carefully selected set of modern, proven technologies that ensure blazing-fast builds, intuitive development workflows, and a superior user experience. This page breaks down the core frameworks and libraries that make Dory a lightweight yet powerful static site generator designed specifically for technical documentation.
+
+Whether you are a developer aiming to customize Dory or an engineering lead evaluating Dory for your team, understanding these foundational technologies reveals why Dory achieves speed, flexibility, and portability without compromising on features.
+
+---
+
+## Core Technologies
+
+### 1. Preact — A Lightweight React-Compatible UI Library
+
+Dory leverages Preact for its UI layer—a minimal, high-performance alternative to React that shares the same modern API but with a much smaller footprint.
+
+- **Why Preact?**
+  - Delivers fast initial page loads due to its tiny bundle size
+  - Enables full React compatibility, allowing use of React tooling and hooks
+  - Facilitates smooth client-side interactivity with minimal runtime overhead
+
+> This directly benefits your docs by making the site fast and snappy for users, even on low-powered devices or slow networks.
+
+### 2. Vite — Next-Generation Build Tool
+
+At the heart of Dory’s build process is Vite, a cutting-edge build tool focused on providing an unmatchable developer experience with rapid hot module replacement (HMR) and lightning-fast builds.
+
+- **Key contributions to Dory:**
+  - Instant hot reload during documentation writing for real-time feedback
+  - Seamless integration with Preact and MDX files
+  - Support for custom plugins powering advanced content preprocessing and sanitization
+
+### 3. Tailwind CSS — Utility-First Styling Framework
+
+Tailwind CSS powers Dory’s design system, enabling styles to be defined declaratively through utility classes.
+
+- **Benefits for users:**
+  - Consistent, responsive, and customizable UI without repetitive CSS
+  - Easy theming and overrides thanks to Tailwind’s design tokens
+  - Maintains minimal CSS bundle size by purging unused styles in production
+
+### 4. Mermaid — Dynamic Diagram Rendering
+
+Documentation often demands visual explanations; Dory integrates Mermaid to enable easy creation of flowcharts, sequence diagrams, and more within Markdown content.
+
+- **Why Mermaid matters:**
+  - Converts simple text syntax into dynamic SVG diagrams
+  - Embeds directly inside MDX without external dependencies
+  - Enhances comprehension through visual storytelling
+
+### 5. TypeScript — Strictly Typed Superset of JavaScript
+
+Developed entirely with TypeScript, Dory offers a robust codebase with strict typing, improving maintainability and reducing runtime errors.
+
+- **Developer advantages:**
+  - Comprehensive type safety throughout the project
+  - Modern JavaScript features with backward compatibility ensured by config
+  - Better editor support and autocompletion during development
+
+---
+
+## How These Technologies Work Together
+
+Dory’s static site generator processes your `.mdx` files through Vite’s build pipeline enhanced by custom plugins, converting rich Markdown with interactive components and Mermaid diagrams into optimized static bundles. Preact takes over at runtime, delivering a smooth client-side experience. Tailwind controls styling throughout for a modern, clean visual system.
+
+This stack ensures incremental live editing during development and highly efficient static builds for production, maintaining top-notch performance and flexibility.
+
+---
+
+## Real-World Scenario: Writing and Previewing Docs
+
+Imagine you’re documenting a complex API:
+
+1. You write your content in `.mdx` with embedded Mermaid diagrams.
+2. Vite instantly hot-reloads the docs, showing updates live.
+3. Preact re-renders components smoothly without full page reloads.
+4. Tailwind ensures your docs look professional and consistent.
+5. When ready, the build produces a lightweight, fully static site deployable anywhere.
+
+The result is a delightful editing experience paired with a fast, reliable, and portable documentation website.
+
+---
+
+## Practical Tips
+
+- Customize styles easily by modifying Tailwind configuration or extending utility classes.
+- Use Preact hooks carefully for stateful components to keep your documentation interactive and minimal.
+- Leverage Vite’s plugin system to add or adjust content preprocessing tailored to your documentation needs.
+- Include Mermaid diagrams to clarify workflows and relationships without complex setup.
+
+---
+
+## Troubleshooting Common Issues
+
+- If the development server does not hot reload as expected, ensure your `.mdx` files are within the configured source folders.
+- Styling quirks often come from conflicting Tailwind classes; audit class usage or check your theme overrides.
+- Mermaid diagrams require valid syntax; validate your Mermaid code if diagrams aren’t rendering.
+- Strict TypeScript settings might flag unused code; keep your imports and components clean.
+
+---
+
+## Summary
+
+Understanding Dory’s technology stack equips you to harness its power fully and customize to your team’s documentation needs. This modern stack balances speed, developer ergonomics, and rich features, delivering an exceptional static documentation experience.
+
+---
+
+<AccordionGroup title="Explore Core Configuration Files and Code">
+<Accordion title="vite.config.ts">
+This file configures Vite plugins including Preact, MDX processing, Tailwind CSS integration, and custom plugins for content sanitization and LLM support, ensuring an optimized build and dev environment.
+</Accordion>
+<Accordion title="tsconfig.node.json & tsconfig.app.json">
+These TypeScript configuration files enable strict typing, modern language targets, JSX support with Preact, and settings tailored for bundler-based development workflows.
+</Accordion>
+<Accordion title="src/mdx/mdx.tsx">
+Entry points for MDX components and rendering wrappers that enhance page rendering, including automatic title hiding to optimize UX.
+</Accordion>
+</AccordionGroup>
+
+<Source url="https://github.com/clidey/dory" paths={[
+  { path: "vite.config.ts", range: "1-38" },
+  { path: "tsconfig.node.json", range: "1-34" },
+  { path: "tsconfig.app.json", range: "1-41" },
+  { path: "src/mdx/mdx.tsx", range: "1-73" },
+]} />
+
+---
+
+## Next Steps
+
+Explore how Dory’s architecture leverages this stack for a seamless documentation workflow by visiting the [System Architecture](./system-architecture) page. To get hands-on, jump to the [Getting Started](../../getting-started/first-run-validation/start-development-server) guide and build your first site.
+
+---
+
+## Related Pages
+
+- [What is Dory?](../introduction-core-concepts/what-is-dory)
+- [Features at a Glance](../feature-overview/features-at-a-glance)
+- [Core Concepts & Terminology](../introduction-core-concepts/core-concepts-terminology)
+- [System Architecture](../architecture-integration/system-architecture)
+
+---
+
+Feel confident knowing Dory's modern technology stack is designed for solid performance, developer happiness, and flexible customization to bring your technical documentation to life with precision and speed.

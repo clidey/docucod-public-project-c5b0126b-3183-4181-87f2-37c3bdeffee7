@@ -1,0 +1,207 @@
+---
+title: "Troubleshooting Common Setup Issues"
+description: "Covers the most frequent stumbling blocks—dependency problems, port conflicts, config errors, and missing files—plus actionable fixes. Reduces frustration during first-time setup."
+---
+
+# Troubleshooting Common Setup Issues
+
+Setting up your Dory documentation project for the first time can sometimes present unexpected hurdles. This guide addresses the most frequent setup issues including dependency conflicts, port usage problems, configuration errors, and missing file challenges. With practical fixes and proactive tips, you’ll be able to resolve these blockers quickly and confidently, ensuring smooth progression from setup to your first successful build and preview.
+
+---
+
+## 1. Dependency Problems
+
+Dependency issues are often the root cause of failed installs or runtime errors.
+
+### Common Symptoms
+- Errors during `pnpm install` or similar package manager commands.
+- Missing modules or package version conflicts.
+- Errors mentioning `preact`, `vite`, or other core dependencies.
+
+### How to Fix
+1. **Ensure Correct Package Manager:**
+   Dory uses `pnpm` as the recommended package manager.
+
+   Install pnpm globally if missing:
+   ```bash
+   npm install -g pnpm
+   ```
+
+2. **Clean Install:**
+   Remove existing `node_modules` and lock files to clear corrupted installs:
+   ```bash
+   rm -rf node_modules pnpm-lock.yaml
+   pnpm install
+   ```
+
+3. **Check Node.js Version:**
+   Confirm you meet the minimum Node.js version (see [System Requirements](/getting-started/prerequisites-installation/system-requirements)):
+   ```bash
+   node -v
+   ```
+
+4. **Update Dependencies:**
+   Sometimes updating core packages resolves conflicts:
+   ```bash
+   pnpm update
+   ```
+
+<Tip>
+Always run `pnpm install` from the root of your Dory project directory where your `package.json` and `dory.json` reside.
+</Tip>
+
+---
+
+## 2. Port Conflicts on Development Server
+
+When running the development server with `pnpm run dev`, a common issue is that the default port (usually 3000) is already taken.
+
+### Symptoms
+- Error messages like `Port 3000 is already in use`.
+- Development server fails to start.
+
+### Resolution Steps
+1. **Find Existing Process:**
+   Identify the process occupying the port.
+
+   - On macOS/Linux:
+     ```bash
+     lsof -i :3000
+     ```
+   - On Windows (PowerShell):
+     ```powershell
+     netstat -ano | findstr :3000
+     ```
+
+2. **Stop the Conflicting Process:**
+   - On macOS/Linux:
+     ```bash
+     kill -9 <PID>
+     ```
+   - On Windows (PowerShell):
+     ```powershell
+     taskkill /PID <PID> /F
+     ```
+
+3. **Change Port (Optional):**
+   Run dev server on a different port if stopping the conflict is not feasible:
+   ```bash
+   pnpm run dev -- --port=4000
+   ```
+
+### Avoiding this Issue
+- Close other instances of Dory or unrelated apps using port 3000.
+- Use tools like `npx kill-port 3000` for a simple cleanup.
+
+<Note>
+Adjust your URL accordingly if you change the port (e.g., `http://localhost:4000`).
+</Note>
+
+---
+
+## 3. Configuration File (`dory.json`) Errors
+
+Your project’s central configuration lies in `dory.json`. Errors here can cause build failures or broken navigation.
+
+### Common Issues
+- Invalid JSON syntax (missing commas, quotes).
+- Incorrect navigation structure or missing required properties.
+- Paths in your navigation not matching actual pages.
+
+### How to Troubleshoot
+1. **Validate JSON Syntax:**
+   Use JSON validators online or tools like `jq`:
+   ```bash
+   jq . dory.json
+   ```
+   This confirms syntactic correctness.
+
+2. **Check Navigation Paths:**
+   Ensure every page path defined under navigation exactly matches the `.mdx` file location and naming.
+
+3. **Refer to Example Structure:**
+   Navigation tabs must have groups, and groups must have pages, e.g.:
+   ```json
+   {
+     "navigation": {
+       "tabs": [
+         {
+           "tab": "Getting Started",
+           "groups": [
+             {
+               "group": "Setup",
+               "pages": ["install-cli", "create-project"]
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
+
+4. **Use CLI Validation:**
+   Run `dory build` and carefully read any error messages related to config parsing.
+
+<Tip>
+Maintain your `dory.json` with clear indentation and comments (if using JSON5 or similar) during development before finalizing as standard JSON.
+</Tip>
+
+---
+
+## 4. Missing or Misplaced Documentation Files
+
+Dory relies on correct detection of `.mdx` files and related assets under the `/docs` folder.
+
+### Symptoms
+- Pages missing in the navigation or do not load.
+- Build errors complaining about non-existent files.
+
+### Fixes
+1. **Confirm File Locations:**
+   Your markdown files must reside in the `docs` directory at the project root.
+
+2. **Naming Conventions:**
+   File names should be lowercase and match names used in `dory.json` navigation. For example, `install-cli.mdx` corresponds to `"install-cli"` in the config.
+
+3. **Check for Orphaned Pages:**
+   Files outside of the navigation will not appear unless automatically picked up—this behavior depends on your config.
+
+4. **Verify Frontmatter Presence:**
+   Each `.mdx` file should start with frontmatter containing a `title` to appear properly on navigation and headers.
+
+5. **Use Preview Server:**
+   Launch development server:
+   ```bash
+   pnpm run dev
+   ```
+   Then navigate through your site to confirm all pages load as expected.
+
+<Warning>
+Avoid nested folder structures with inconsistent navigation configuration to prevent path resolution errors.
+</Warning>
+
+---
+
+## 5. General Best Practices & Tips
+
+- **Keep Your Environment Clean:** Regularly clear node modules and lock files if recurring dependency or build errors appear.
+- **Run Commands in Project Root:** Commands like `pnpm run dev` or `dory build` require you to be in the root folder containing `dory.json`.
+- **Monitor Console Output:** Pay attention to terminal output for helpful warnings and errors.
+- **Leverage Logs for Debugging:** Increased logging can be enabled via environment variables if needed.
+
+---
+
+## 6. When to Seek Further Help
+
+If troubles persist after following these steps:
+
+- Review the detailed [Getting Started guides](/getting-started).
+- Verify your environment meets the [System Requirements](/getting-started/prerequisites-installation/system-requirements).
+- Check related [CLI Installation](/getting-started/prerequisites-installation/install-cli) and [Project Setup](/getting-started/project-setup/create-project) documentation.
+- Open an issue on the [Dory GitHub repository](https://github.com/clidey/dory) with your environment details and error logs.
+
+---
+
+By following this guide, you’ll overcome the common setup blockers efficiently, getting your Dory-powered documentation site up and running smoothly.
+
+---

@@ -1,0 +1,177 @@
+---
+title: "What is Dory?"
+description: "An introduction to Dory as a lightweight static site generator for technical documentation. Learn how it simplifies documentation workflows, its developer-centered philosophy, and the value it brings by eliminating complex server-side rendering and CI/CD dependencies."
+---
+
+# What is Dory?
+
+## Introduction
+
+Dory is a lightweight static site generator designed specifically for technical documentation. It empowers developers and documentation teams to quickly deploy clean, fast, and customizable documentation sites without the usual complexity of server-side rendering or elaborate CI/CD pipelines.
+
+Unlike bulky, general-purpose static site generators, Dory offers a streamlined workflow centered entirely on documentation. It elegantly drops the need for runtime server components, relying fully on static assets and client-side rendering powered by modern web technologies.
+
+## Why Dory Matters
+
+Imagine you are a developer wrestling with slow documentation builds that require heavyweight frameworks and complicated deployment setups. Dory solves these pain points by offering:
+
+- **Simplicity**: Just add your `.mdx` files and configure a single `dory.json` file — no complex build pipelines or server frameworks.
+- **Speed**: Experience near-instant hot reload during development and fast static site generation for production.
+- **Portability**: Generated sites are static, enabling easy deployment anywhere — from GitHub Pages to Netlify, Vercel, and custom servers.
+- **Focused Developer Experience**: Built with Preact, Vite, and TypeScript for modern, efficient front-end workflows, making it easy to customize and extend.
+
+By eliminating server-side rendering and external CI/CD dependencies, Dory lets you maintain full ownership and control over your documentation deployment without compromises.
+
+## What Makes Dory Unique?
+
+- **Developer-Centered Philosophy**: Designed from the ground up for developers creating technical documentation, meaning less friction and fewer abstractions.
+  
+- **Minimal Magic, Maximum Transparency**: The core is readable, hackable, and simple — no black-box components or hard-to-debug tools.
+
+- **MDX Content First**: Supports `.mdx` files which combine Markdown and JSX, allowing you to mix prose with interactive React-like components effortlessly.
+
+- **Embedded Tooling**: Comes with built-in UI components and utilities optimized for documentation use cases — code highlighting, Mermaid diagrams, API playgrounds, and more.
+
+## How Dory Works at a High Level
+
+At its core, Dory generates a fully static documentation website by:
+
+1. **Processing `.mdx` Files:** Parses Markdown mixed with JSX components to create rich, interactive documentation pages.
+
+2. **Building Navigation:** Uses a single configuration file, `dory.json`, to define the site structure, navigation tabs, and groups.
+
+3. **Preloading Metadata:** Optimizes performance by preloading page metadata (frontmatter) to facilitate fast page loads and client-side search.
+
+4. **Client-Side Rendering:** Uses a lightweight frontend stack — Preact and Vite — to hydrate static pages and enable features like instant navigation and embedded interactivity.
+
+5. **Serving as Static Assets:** Outputs everything as static files that any web server or static deployment platform can host.
+
+This approach trims unnecessary complexity and yields a blazing-fast documentation experience.
+
+## Key Benefits of Using Dory
+
+- **Lightning-Fast Development Feedback:** Changes to content or configuration reflect immediately with hot reload.
+
+- **Effortless Deployment:** Static artifacts deploy to any hosting environment without server dependencies.
+
+- **Improved Maintainability:** Simple, transparent tooling reduces ongoing maintenance overhead.
+
+- **Rich Interactive Documentation:** Easily embed API playgrounds, Mermaid diagrams, and custom JSX components within your docs.
+
+- **Seamless Integrations:** Native support for OpenAPI and AsyncAPI lets you wire API docs with interactive testing tools.
+
+## Real-World Scenario
+
+Imagine your team needs to ship documentation alongside a continuously evolving API. Using Dory, you place your `.mdx` files alongside OpenAPI specs. When you start the dev server, you get instant previews of your docs — complete with interactive API request playgrounds — all without additional config.
+
+When ready to publish, a single static build command produces a deployable site you can host anywhere.
+
+This removes the common headaches of managing separate servers, complicated rendering setups, or long build times.
+
+## How This Page Fits In
+
+This introduction page lays the foundation for understanding Dory’s core purpose and the philosophy behind its design. It connects naturally with subsequent documentation pages covering:
+
+- **Who Dory is For:** Identifying the ideal user profiles and practical use cases.
+- **Core Concepts & Terminology:** Clarifying essential terms and architecture.
+- **Feature Overview:** Detailing available components and capabilities.
+
+By grasping the essence of Dory here, users are better prepared to explore configuration, setup, and customization in later sections.
+
+---
+
+## Getting Started Preview
+
+To begin using Dory:
+
+- Prepare your documentation content as `.mdx` files.
+- Configure your site structure in the `dory.json` file.
+- Run the development server with `pnpm run dev` to preview instantly.
+- Build the static site using `pnpm run build` when ready to deploy.
+
+For detailed setup instructions and a guided introduction, proceed to the Getting Started guides.
+
+<Tip>
+  Keep your documentation modular by organizing `.mdx` files logically and updating `dory.json` navigation to reflect site structure.
+</Tip>
+
+---
+
+## Troubleshooting Common Issues
+
+- **Slow or Unresponsive Development Server:** Ensure dependencies are installed correctly (`pnpm install`) and no port conflicts exist.
+
+- **Navigation Entries Missing:** Verify your `dory.json` file is properly structured with valid tab, group, and page entries.
+
+- **Static Build Fails:** Check for syntax errors in your `.mdx` files and ensure your build environment meets Node.js version requirements.
+
+- **Dependencies Not Found:** Confirm `pnpm` usage as preferred package manager and that the lockfile is up to date.
+
+## Additional Resources
+
+For a deeper dive into the architecture, components, and customization options, explore the following documentation sections:
+
+- [Who is Dory For? Target Audience & Use Cases](./target-audience-use-cases)
+- [Core Concepts & Terminology](./core-concepts-terminology)
+- [Features at a Glance](./features-at-a-glance)
+- [Deployment & Portability](./deployment-portability)
+
+You can also refer to the source code and CLI details in the [GitHub Repository](https://github.com/clidey/dory).
+
+---
+
+## Summary
+
+Dory is your streamlined Swiss Army knife for delivering technical documentation: fast, portable, and developer-first. It frees you from the usual deployment hassles, while letting you build feature-rich docs with modern frontend tools.
+
+Embrace Dory to accelerate your documentation pipelines, empower your developer community, and get reliable static sites that just work.
+
+
+---
+
+## Quick Facts
+
+- Developed with Preact, Vite, Tailwind CSS, and TypeScript.
+- Supports `.mdx` file format for rich interactive docs.
+- Minimal configuration with single `dory.json` file.
+- No server-side rendering; fully static outputs.
+- Hot reload during development for instant feedback.
+- Built-in support for API docs with OpenAPI/AsyncAPI.
+
+
+---
+
+## Code Snippet: Basic CLI Usage
+
+```bash
+# Build your documentation site
+node bin/dory.js build
+
+# Preview the built site locally
+node bin/dory.js preview
+```
+
+
+## Example Site Structure (dory.json)
+
+```json
+{
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Overview",
+        "groups": [
+          {
+            "group": "Introduction & Core Concepts",
+            "pages": ["what-is-dory", "target-audience-use-cases", "core-concepts-terminology"]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+This defines a navigation tab "Overview" with a group "Introduction & Core Concepts" containing three pages.
+
+---

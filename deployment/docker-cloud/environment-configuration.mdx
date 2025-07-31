@@ -1,0 +1,234 @@
+---
+title: "Environment Variables & Configuration"
+description: "Understand how to configure environments for different deployments—whether using local, CI/CD, Docker, or cloud. Find guidance on handling secrets, analytics tracking, and site configuration for consistent deployments."
+---
+
+# Environment Variables & Configuration
+
+Configure and manage environment-specific settings to ensure consistent, secure, and efficient deployments of your Dory-generated documentation sites. This guide covers how to set environment variables for different deployment contexts—local development, CI/CD, Docker containers, and cloud platforms—plus managing secrets, analytics tracking, and site configuration. By following these best practices, you guarantee that your site behaves consistently and securely across all deployment environments.
+
+---
+
+## 1. Understanding Environment Variables in Dory Deployments
+
+Environment variables let you customize how Dory runs and interacts with external services without changing the code or configuration files directly. Different deployment scenarios require distinct environment variable setups:
+
+- **Local Development:** Use `.env` files or shell exports to set variables affecting development server behavior.
+- **CI/CD Pipelines:** Inject secrets and configuration via your pipeline's environment management for repeatable automated builds.
+- **Docker Containers:** Pass variables into containers at runtime or build time to control site behavior inside isolated environments.
+- **Cloud Platforms:** Leverage platform-specific environment variable configuration, e.g., Netlify, Vercel, or AWS.
+
+<Check>
+Environment variables ensure your documentation site is portable, secure, and tailored for each deployment stage.
+</Check>
+
+---
+
+## 2. Setting Environment Variables for Local Development
+
+Local setups require environment variables primarily to configure debugging options, analytics, or enable preview features.
+
+### Recommended Workflow
+
+1. Create a `.env.local` file in your project root.
+2. Add variables using `KEY=VALUE` syntax. For example:
+
+   ```
+   ANALYTICS_ENABLED=true
+   DOCS_SITE_URL=http://localhost:3000
+   POSTHOG_API_KEY=your-local-api-key
+   ```
+
+3. Restart your development server (`pnpm run dev`) to apply changes.
+
+### Common Variables
+
+- `ANALYTICS_ENABLED` – Enables or disables runtime analytics tracking.
+- `DOCS_SITE_URL` – Base URL for generating absolute links (helpful for previews).
+- `POSTHOG_API_KEY` – Key for PostHog analytics integration in dev mode.
+
+<Tip>
+Use `.env.local` for local-only secrets; never commit this file to version control.
+</Tip>
+
+---
+
+## 3. Injecting Environment Variables in CI/CD Pipelines
+
+To automate builds and deployments securely, your CI/CD system must provide environment variables during build and deployment stages.
+
+### Best Practices
+
+- Store sensitive values like API keys and tokens in secure CI/CD secrets.
+- Reference these secrets as environment variables in build steps.
+- Avoid embedding secrets in configuration files or code.
+
+### Example: GitHub Actions snippet
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+      DEPLOY_ENV: production
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build site
+        run: pnpm run build
+      - name: Deploy
+        run: deploy-scripts/deploy.sh
+```
+
+<Note>
+Ensure your deployment environments read these variables during build and runtime.
+</Note>
+
+---
+
+## 4. Configuring Environment Variables for Docker Deployment
+
+Docker requires careful management of environment variables for portability and security.
+
+### Two Primary Approaches:
+
+- **Build-Time ARGs:** Variables passed during Docker image build to customize build behavior.
+- **Runtime ENVs:** Variables injected when running containers to alter runtime settings (preferred for secrets).
+
+### Example `Dockerfile` snippet
+
+```dockerfile
+ARG POSTHOG_API_KEY
+ENV POSTHOG_API_KEY=$POSTHOG_API_KEY
+
+# ... the rest of the build and serve steps
+```
+
+### Running Container
+
+```bash
+docker run -e POSTHOG_API_KEY=your_api_key -p 8080:80 your-docs-image
+```
+
+<Tip>
+Avoid baking secrets into images; prefer runtime injection to keep images portable and secure.
+</Tip>
+
+---
+
+## 5. Handling Environment Variables on Cloud Platforms
+
+When deploying on cloud providers like Netlify, Vercel, AWS S3 with CloudFront, or GitHub Pages, environment variables help configure tracking, site URLs, and other settings without manual config changes.
+
+### Platform-Specific Environment Configuration
+
+- **Netlify:** Settings > Build & Deploy > Environment > Edit Variables
+- **Vercel:** Project > Settings > Environment Variables
+- **AWS S3/CloudFront:** Use your build server or CI to inject variables before deployment
+- **GitHub Pages:** Use GitHub Actions secrets like in CI/CD example above
+
+<Info>
+Refer to [Deploying to Cloud Platforms](/deployment/docker-cloud/deploying-cloud-platforms) for detailed platform instructions.
+</Info>
+
+---
+
+## 6. Managing Secrets Securely
+
+Secrets such as API keys (PostHog, third-party analytics), tokens, or credentials must never be committed to source control.
+
+### Strategies
+
+- Use `.env.local` for development secrets (add to `.gitignore`).
+- Store secrets in CI/CD and platform secret managers.
+- Access them dynamically at build or runtime only.
+
+<Warning>
+Never hardcode secrets in configuration files like `dory.json` or public markdown.
+</Warning>
+
+---
+
+## 7. Analytics and Tracking Configuration
+
+Dory supports integrating analytics platforms like PostHog to capture usage data without impacting performance or privacy.
+
+### Key Variables
+
+- `POSTHOG_API_KEY`: Your PostHog project key.
+- `ANALYTICS_ENABLED`: Enable or disable analytics tracking.
+
+### How to Enable
+
+Set these variables in your platform’s environment variable config or `.env.local` for development.
+
+<Check>
+Confirm analytics loading only when enabled to respect privacy and performance.
+</Check>
+
+---
+
+## 8. Site Configuration via Environment Variables
+
+Certain runtime options and site-specific settings are configurable via environment variables to avoid hardcoded values.
+
+Examples:
+
+| Variable         | Purpose                               | Example Value                 |
+|------------------|-------------------------------------|------------------------------|
+| `DOCS_SITE_URL`  | Base URL for the site                | `https://docs.example.com`    |
+| `ENABLE_FEATURE_X`| Toggle experimental features         | `true` or `false`             |
+
+### Access Pattern
+
+These variables can be used internally by your build scripts or the documentation site to dynamically adjust content or behavior based on the deployment environment.
+
+---
+
+## 9. Best Practices for Using Environment Variables & Configuration
+
+- **Consistency:** Use variables to standardize configuration across environments.
+- **Security:** Keep secrets out of source control.
+- **Documentation:** Clearly document required variables and their usage.
+- **Validation:** Implement checks in your deployment scripts to verify required variables are set.
+- **Separation:** Distinguish between build-time and runtime variables.
+
+---
+
+## 10. Troubleshooting Common Configuration Issues
+
+<AccordionGroup title="Common Environment Configuration Issues">
+<Accordion title="Site behaves differently between local and production">
+Check that all required environment variables are set correctly in your production environment. Missing analytics keys or site URL variables often cause discrepancies.
+</Accordion>
+<Accordion title="Secrets exposed in public repositories">
+Ensure `.env.local` and other secret-containing files are added to `.gitignore`. Use CI/CD secret managers instead.
+</Accordion>
+<Accordion title="Docker container does not pick up environment variables">
+Verify that variables are passed with `docker run -e VAR_NAME=value` or via Docker Compose environment files.
+</Accordion>
+<Accordion title="Analytics tracking not showing data">
+Confirm `POSTHOG_API_KEY` is set and `ANALYTICS_ENABLED` is true in your deployed environment.
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Further Reading and References
+
+- [Deploying with Docker](/deployment/docker-cloud/docker-image-build)
+- [Deploying to Cloud Platforms](/deployment/docker-cloud/deploying-cloud-platforms)
+- [Building the Static Site](/deployment/getting-started-production/building-static-site)
+- [Serving Static Files](/deployment/getting-started-production/serving-static-files)
+- [Performance & Deployment Optimization](/guides/customization-and-best-practices/performance-and-deployment)
+
+
+---
+
+By mastering environment variables and configuration management, you will achieve reliable, secure, and consistent Dory documentation deployments aligned with your infrastructure and operational policies.
+
+---
+
+*End of Environment Variables & Configuration Guide*

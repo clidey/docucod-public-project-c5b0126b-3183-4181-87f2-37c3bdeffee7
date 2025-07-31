@@ -1,0 +1,184 @@
+---
+title: "Run the Development Server"
+description: "Details the use of the dev server for real-time editing and preview, including commands, expected output, and verifying the local doc site is working."
+---
+
+# Run the Development Server
+
+This guide helps you start the Dory development server for real-time editing and preview of your documentation site. By following these steps, you’ll launch a local server that instantly updates your docs as you edit them, enabling a fast, interactive authoring experience.
+
+---
+
+## 1. Prerequisites for Running the Dev Server
+
+Before you start, ensure you have completed the following setup tasks:
+
+- **Project Setup:** You have cloned or created a documentation project with a valid `docs` directory containing your `.mdx` files.
+- **Dependency Installation:** You have run `pnpm install` to install all necessary dependencies.
+- **Navigate to Project Root:** Your terminal is positioned at the root of your Dory project (where `package.json` and `pnpm-lock.yaml` reside).
+
+> If you haven’t set up your project yet, refer to the [Initialize Your Documentation Project](../project-setup/create-project) guide.
+
+---
+
+## 2. Starting the Development Server
+
+Follow these exact steps to launch the development server:
+
+<Steps>
+<Step title="Open your terminal at the project root">
+Ensure your terminal working directory contains `package.json` and the `docs/` folder.
+</Step>
+<Step title="Run the development command">
+Execute the following command:
+
+```bash
+pnpm run dev
+```
+
+This runs the development server with hot reload, usually powered by Vite.
+</Step>
+<Step title="Wait for server to start">
+You will see output similar to:
+
+```text
+  VITE vX.Y.Z  ready in 300ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+```
+
+This confirms the server is running and the URL where you can preview your documentation.
+</Step>
+<Step title="Open the local URL in your browser">
+Navigate to `http://localhost:3000/` (or the URL shown in your terminal). You should see your documentation site loaded and ready.
+</Step>
+</Steps>
+
+---
+
+## 3. What Happens When the Dev Server is Running
+
+- **Live Hot Reload:** Any changes saved in your `.mdx` files inside `docs/` refresh the browser automatically.
+- **Dynamic Frontmatter & Navigation:** The dev server continuously updates generated files such as `frontmatter.json` and serves them dynamically.
+- **Native MDX Rendering:** Your MDX content renders with live components and styling powered by Preact and Tailwind CSS.
+- **Access to Full Navigation:** The site reflects the `dory.json` configured navigation structure immediately.
+
+---
+
+## 4. Verifying Your Local Documentation Site
+
+To confirm your documentation server is fully operational:
+
+- Open the browser console (usually F12 or Ctrl+Shift+I) and check for errors. The absence of errors indicates a healthy build.
+- Confirm navigation tabs and groups match your `dory.json` configuration.
+- Edit an `.mdx` file in your `docs/` folder and save it — the page should update instantly in your browser.
+- Verify special features such as Mermaid diagrams, code highlighting, and LaTeX math render as expected.
+
+---
+
+## 5. Helpful Tips & Common Pitfalls
+
+<Tip>
+If the dev server does not start or you see errors, check:
+
+- Have you installed dependencies with `pnpm install`?
+- Is your Node.js version compatible? (See [System Requirements](../prerequisites-installation/system-requirements))
+- Are you in the correct folder path?
+- Confirm no other process is using port 3000 (use commands like `lsof -i :3000`).
+</Tip>
+
+<Tip>
+Use the flag `--host` with `pnpm run dev` if you want to expose your server on the local network:
+
+```bash
+pnpm run dev -- --host
+```
+
+This allows others on your network to preview your docs.
+</Tip>
+
+<Warning>
+Make sure your `docs/` folder contains valid `.mdx` files and a well-formed `dory.json` configuration, or the site may not load correctly.
+</Warning>
+
+---
+
+## 6. Next Steps After Running the Development Server
+
+- Begin editing your documentation content live.
+- Sync your `dory.json` navigation file to organize pages.
+- When ready, build a static production version by running:
+
+```bash
+pnpm run build
+```
+
+- Preview the static site locally using:
+
+```bash
+pnpm run preview
+```
+
+- To deploy, use any static hosting provider or Docker (refer to the Docker deployment guides).
+
+---
+
+## 7. Troubleshooting
+
+<AccordionGroup title="Common Development Server Issues & Fixes">
+<Accordion title="Port is Already in Use">
+If you see an error about port 3000 being taken:
+
+- Find process using port:
+
+```bash
+lsof -i :3000
+```
+
+- Kill the process:
+
+```bash
+kill -9 <PID>
+```
+
+- Restart the dev server.
+</Accordion>
+
+<Accordion title="Dependencies Not Installed or Missing">
+Ensure you are using `pnpm` and run:
+
+```bash
+pnpm install
+```
+
+Avoid mixing with `npm` or `yarn` to prevent conflicts.
+</Accordion>
+
+<Accordion title="No Output or Blank Page in Browser">
+Check the browser console for errors.
+
+Verify your `docs/` folder contains valid MDX content and `dory.json` is proper.
+
+Run the dev server with verbosity if needed to trace problems.
+</Accordion>
+</AccordionGroup>
+
+---
+
+For full setup details, see the broader [Getting Started Guide](../project-setup/create-project) and [CLI Installation](../prerequisites-installation/install-cli) documentation.
+
+
+---
+
+## References and Related Documentation
+
+- [Initialize Your Documentation Project](../project-setup/create-project)
+- [Configure Dory Navigation (dory.json)](../project-setup/configure-dory)
+- [Add & Structure Documentation Content](../project-setup/add-docs)
+- [Installing the CLI](../prerequisites-installation/install-cli)
+- [System Requirements](../prerequisites-installation/system-requirements)
+- [Build and Serve the Static Site](../first-run-validation/build-static-site)
+- [Serving Docs with Docker](../first-run-validation/docker-run)
+
+---

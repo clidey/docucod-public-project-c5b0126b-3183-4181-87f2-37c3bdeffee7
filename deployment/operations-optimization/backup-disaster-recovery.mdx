@@ -1,0 +1,160 @@
+---
+title: "Backup and Disaster Recovery"
+description: "How to set up backups and quickly restore your documentation site, with recommendations for static content backup, version control strategies, and disaster recovery workflows."
+---
+
+# Backup and Disaster Recovery
+
+Ensuring the safety and availability of your Dory-generated documentation site is critical for maintaining uninterrupted access and quick recovery from unexpected incidents. This guide walks you through best practices for setting up backups, managing version control of your documentation source, and effective disaster recovery workflows to minimize downtime.
+
+---
+
+## 1. Understanding Backup Essentials
+
+Before diving into backup strategies, it's vital to grasp the fundamental components you need to safeguard:
+
+- **Source Documentation Files**: Your Markdown/MDX files, configuration (`dory.json`), and assets stored in the `docs/` directory.
+- **Built Static Site**: The generated static files outputted by the build process (typically in the `dist/` directory).
+- **Configuration and Environment Settings**: Build scripts, environment variables, CI/CD pipeline configurations, and any customized themes.
+
+### Why Backups Matter
+
+Even though Dory generates static sites that can be redeployed easily, losing the source `docs/` files or configuration means losing your ability to update or restore your docs accurately. Having reliable backups ensures you can restore your site swiftly without data loss or extended downtime.
+
+<Tip>
+Always prioritize backing up your source files and configuration. The static build (`dist/`) can be regenerated anytime from these, but the reverse is not true.
+</Tip>
+
+---
+
+## 2. Backup Strategies for Dory Documentation
+
+### 2.1. Source Repository Backup via Version Control
+
+Since Dory projects consist primarily of files stored in a repository, use Git or your preferred version control system as the first line of defense.
+
+- **Commit Regularly**: Save incremental changes with meaningful commit messages.
+- **Remote Hosting**: Push your repository to a remote platform like GitHub, GitLab, or Bitbucket.
+- **Branch Protection & Backups**: Protect main branches and configure repository backups or mirrors where supported.
+
+This approach not only provides version history but also serves as a natural backup point.
+
+### 2.2. Automating Site Backups
+
+In addition to version control, maintain backups of your deployed static files and assets:
+
+- **Periodic Snapshots**: Schedule regular snapshots or file system backups on your hosting or production environment.
+- **Cloud Storage Backup**: Store copies of your static site files in services like AWS S3, Azure Blob Storage, or Google Cloud Storage.
+- **Incremental Backups**: Utilize tools that track and backup only changed files to optimize storage and speed.
+
+<Tip>
+Configure automated backups aligned with your deployment frequency to capture all meaningful updates.
+</Tip>
+
+### 2.3. Configuration & Environment Backup
+
+Don’t forget to keep copies of configurations, environment files, and deployment scripts outside your primary repository, especially if they contain secrets or environment-specific data.
+
+---
+
+## 3. Disaster Recovery Workflow
+
+When disaster strikes, how you restore your documentation site defines your operational resilience. Follow this workflow to achieve a quick and reliable recovery:
+
+### Step 1: Restore Source Files
+- If the source repository is intact, clone or pull the latest commit.
+- If lost, recover from remote backups or snapshots.
+
+### Step 2: Rebuild the Static Site
+- Use the Dory CLI (`pnpm run build` or `dory build`) to generate the static files anew.
+- Verify that the build completes without errors and outputs to the `dist/` directory.
+
+### Step 3: Redeploy Your Site
+- Upload or deploy the `dist/` directory to your hosting platform.
+- Apply any environment variables and configuration settings necessary for your environment.
+
+### Step 4: Validate Restoration
+- Confirm that the documentation site loads correctly and all navigation and content render as expected.
+- Use validation tools or your standard staging checks.
+
+<Tip>
+Maintain detailed logs of deployments and backups to facilitate auditing and problem diagnosis during recovery.
+</Tip>
+
+---
+
+## 4. Best Practices for Backup and Recovery
+
+- **Leverage Git for Source Control**: Rely on Git repositories with remote mirrors for robust source backup.
+- **Automate Backup Scheduling**: Use cron jobs, CI/CD pipeline tasks, or cloud scheduler tools to automate backup creation.
+- **Separate Backup Storage**: Keep backups off-site or on a separate storage medium to prevent data loss in case of hardware failure.
+- **Document Recovery Procedures**: Maintain clear, written recovery steps to enable swift action by your team.
+- **Test Your Backups Regularly**: Periodically restore backups in a test environment to verify integrity.
+- **Secure Your Backups**: Protect backup data with encryption and access controls to safeguard sensitive information.
+
+<Warning>
+Ignoring backup hygiene or delaying restoration tests can prolong downtime and increase data loss in case of failure.
+</Warning>
+
+---
+
+## 5. Practical Example: GitHub + Cloud Backup Workflow
+
+1. **Daily Commits:** Update and commit documentation changes to your GitHub repository.
+2. **CI/CD Build:** Automatically build the static site using a pipeline triggered on push.
+3. **Deploy & Backup:** Deploy to AWS S3; configure S3 lifecycle policies and Cross-Region Replication for backup.
+4. **Recovery:** In case of failure, retrieve latest source from GitHub, rebuild locally or in the pipeline, and redeploy to S3.
+
+This approach combines version control, automation, and cloud redundancy for a resilient workflow.
+
+---
+
+## 6. Troubleshooting Common Backup & Restore Issues
+
+<AccordionGroup title="Troubleshooting Backup and Disaster Recovery">
+<Accordion title="Backup Fails or Is Incomplete">
+- Verify sufficient storage and permissions on backup destinations.
+- Check for errors in backup scripts or automation logs.
+- Confirm that files to backup (e.g., `docs/`, `dory.json`) are not excluded accidentally.
+</Accordion>
+
+<Accordion title="Build Fails During Restoration">
+- Check that the environment has the correct Node.js and `pnpm` versions matching system requirements.
+- Ensure dependencies are installed (`pnpm install`) before building.
+- Review build logs for syntax errors or missing files.
+</Accordion>
+
+<Accordion title="Deployment Does Not Reflect Restored Content">
+- Clear CDN caches or browser caches that might serve stale pages.
+- Validate that all static files were uploaded correctly to the hosting environment.
+- Confirm environment-specific configuration variables are properly set.
+</Accordion>
+
+<Accordion title="Lost Source Files or Repository Is Corrupted">
+- Recover from remote repository clones or backups.
+- If irreversible loss, reconstruct docs using other available exports or archives.
+</Accordion>
+</AccordionGroup>
+
+---
+
+## 7. Additional Resources
+
+- [System Requirements](/getting-started/prerequisites-installation/system-requirements) for smooth installation and build stability.
+- [Building the Static Site](/deployment/getting-started-production/building-static-site) for production-ready builds.
+- [Serving Static Files](/deployment/getting-started-production/serving-static-files) deployment and serving best practices.
+- [Deploying with Docker](/deployment/docker-cloud/docker-image-build) if containerized backups and deployments are part of your strategy.
+- [Environment Variables & Configuration](/deployment/docker-cloud/environment-configuration) to properly manage secret and env data.
+
+<Note>
+Backing up Dory-generated sites is about securing both your sources and deployments. Effective disaster recovery hinges on good practices, automation, and periodic validation.
+</Note>
+
+---
+
+With a solid backup and disaster recovery plan, you protect your team's effort and maintain continuous delivery of your invaluable documentation.
+
+
+---
+
+### You are now ready to implement robust backup and disaster recovery strategies that fit your Dory documentation projects and hosting environments.

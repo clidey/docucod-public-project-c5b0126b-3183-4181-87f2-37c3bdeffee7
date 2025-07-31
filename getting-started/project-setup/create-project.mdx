@@ -1,0 +1,196 @@
+---
+title: "Initialize Your Documentation Project"
+description: "Instructions to clone the repository (or set up from scratch), create/copy the `docs` directory, and verify project structure. Ensures users have the correct scaffolding for a successful build."
+---
+
+# Initialize Your Documentation Project
+
+This guide helps you successfully clone the Dory repository (or set up a new documentation project from scratch), create or copy the essential `docs` directory, and verify the correct project structure. Having the right scaffolding is crucial for smooth builds and development.
+
+---
+
+## 1. Clone the Repository or Create a New Project
+
+Start by obtaining the project codebase. You can either clone the official Dory repository or create your own documentation project following the same structure.
+
+### To clone the official Dory repo:
+
+```bash
+# Navigate to your working folder
+git clone https://github.com/clidey/dory.git
+cd dory
+```
+
+### To create a new project from scratch:
+
+- Initialize an empty project directory.
+- You will add configuration and docs directories manually (covered below).
+
+---
+
+## 2. Ensure the `docs` Directory Exists
+
+The `docs` directory is the core content folder where all your documentation MDX files live. This directory must be present at the root of your project for Dory to detect your docs.
+
+### If cloning the repo:
+
+- The `docs` directory is already included.
+- It contains sample documentation to help you get started.
+
+### If setting up manually:
+
+- Create a `docs` directory at your project root:
+
+```bash
+mkdir docs
+```
+
+- Add your `.mdx` files inside this directory.
+
+- The files should follow the structure and naming conventions that map to the navigation hierarchy defined in your `dory.json`.
+
+---
+
+## 3. Create or Copy the `dory.json` Configuration File
+
+The `dory.json` file configures your documentation site, including navigation tabs, groups, and page ordering.
+
+- This file MUST be in the root of your `docs` directory.
+
+- Clone users will already have this configured.
+
+- New projects should create this file by referencing the sample in the cloned repo or [see Configure Dory](../configure-dory).
+
+---
+
+## 4. Verify Project Structure
+
+Make sure your project folder looks like this:
+
+```plaintext
+/dory-project-root
+  ├── docs/
+  │    ├── index.mdx
+  │    ├── getting-started/
+  │    │    ├── prerequisites-installation/
+  │    │    │    ├── system-requirements.mdx
+  │    │    │    ├── install-cli.mdx
+  │    │    │    └── install-docker.mdx
+  │    │    ├── project-setup/
+  │    │    │    ├── create-project.mdx  <-- this page
+  │    │    │    ├── configure-dory.mdx
+  │    │    │    └── add-docs.mdx
+  │    │    └── first-run-validation/
+  │    │         ├── ...
+  │    ├── overview/
+  │    │    └── ...
+  │    └── ...
+  ├── dory.json
+  ├── package.json
+  ├── pnpm-lock.yaml
+  ├── tsconfig.app.json
+  └── vite.config.ts
+```
+
+### Key Checks:
+
+- `docs/` folder exists and contains `.mdx` files following proper hierarchy.
+- `dory.json` is present and valid.
+- Configuration files like `package.json`, `pnpm-lock.yaml`, and `tsconfig.app.json` exist in the root.
+
+---
+
+## 5. Verify Your Setup
+
+After cloning or creating the project and verifying structure, confirm everything is set up correctly before building.
+
+### Steps:
+
+1. **Install dependencies:**
+
+```bash
+pnpm install
+```
+
+2. **Check `docs` directory and `dory.json`:**
+
+```bash
+ls -l docs
+cat docs/dory.json
+```
+
+3. **Run build to verify scaffolding:**
+
+```bash
+pnpm run build
+```
+
+> The build should complete successfully without errors related to missing docs or config.
+
+---
+
+## Practical Tips
+
+- Do not rename or move the `docs` folder; Dory expects it in the root.
+
+- The `dory.json` navigation order determines how your pages are displayed; make sure it maps accurately to your `.mdx` files.
+
+- Use lowercase URLs and paths consistently.
+
+- If working with Git, ensure you `git pull` latest changes before starting.
+
+- Use pnpm for dependency management; avoid npm or yarn to prevent conflicts.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup title="Common Setup Issues">
+<Accordion title="Missing `docs` Directory or `dory.json` File">
+If the build or CLI commands complain about missing files:
+- Verify you are in the correct project root.
+- Confirm the `docs` directory exists and contains `.mdx` files.
+- Ensure `dory.json` is at the root.
+- Run `ls` or `dir` commands to inspect.
+</Accordion>
+<Accordion title="Build Fails Due to Invalid `dory.json`">
+- Check your `dory.json` formatting for syntax errors.
+- Validate JSON structure matches navigation schema.
+- Use JSON linters or editors that highlight errors.
+- Refer to the [Configure Dory](../configure-dory) guide for examples.
+</Accordion>
+<Accordion title="Dependencies or PNPM Issues">
+- Run `pnpm install` to refresh dependencies.
+- Delete `node_modules` and `pnpm-lock.yaml` and reinstall if errors persist.
+- Confirm your Node.js version meets requirements ([see System Requirements](../prerequisites-installation/system-requirements)).
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Summary
+
+This page established the foundation by helping you clone or create your documentation project, set up the `docs` directory, place your MDX content appropriately, and verify your project structure for a successful build and development.
+
+To progress:
+
+- Configure your documentation site in `dory.json` ([Configure Dory](../configure-dory))
+- Add and structure content within `docs` ([Add & Structure Documentation Content](../add-docs))
+- Start the development server to preview your docs ([Run the Development Server](../first-run-validation/start-development-server))
+
+---
+
+## Related Resources
+
+- [System Requirements](../prerequisites-installation/system-requirements)
+- [Installing the CLI](../prerequisites-installation/install-cli)
+- [Docker Installation (Optional)](../prerequisites-installation/install-docker)
+- [Configure Dory (dory.json)](../project-setup/configure-dory)
+- [Add & Structure Documentation Content](../project-setup/add-docs)
+- [Run the Development Server](../first-run-validation/start-development-server)
+
+
+<Tip>
+Having the correct `docs` directory with a valid `dory.json` configuration, and following the project's scaffolding precisely, is essential to unlock the full power of Dory's static site generation and live preview features.
+</Tip>
+
