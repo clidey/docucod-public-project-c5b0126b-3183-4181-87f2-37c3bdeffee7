@@ -3,4 +3,214 @@ title: "Collaboration and Version Control Best Practices"
 description: "Tips and patterns for maintaining clear history when working with teams: how to structure MDX files, organize features, and use version control for safe, collaborative docs development."
 ---
 
-*This page will automatically be generated from the codebase*
+# Collaboration and Version Control Best Practices
+
+## Overview
+
+Working on documentation collaboratively can quickly become complex without clear patterns and practices. This guide equips your team with practical tips for structuring MDX files, organizing features, and leveraging version control to maintain a clean, traceable history. By following these best practices, you will reduce merge conflicts, ensure clarity in your docs' evolution, and foster smooth teamwork.
+
+---
+
+## 1. Organizing MDX Documentation Files
+
+### Why Structure Matters
+
+Your documentation source is a living codebase shared by multiple authors. Clear organization helps prevent accidental overwrites, simplifies navigation, and aligns with Dory's navigation system.
+
+### Recommended File and Folder Structure
+
+- **Group related features or topics into separate folders:**
+  - Example: `docs/getting-started`, `docs/guides`, `docs/api-reference`
+- **Use descriptive file names that mirror documentation titles:**
+  - E.g., `install-cli.mdx`, `websocket-playground-demo.mdx`
+- **Keep MDX files focused:**
+  - Each MDX file should cover a distinct concept or feature.
+  - Avoid mixing unrelated topics within a single document.
+
+### Frontmatter with Metadata
+
+- Always define `title` and `description` in frontmatter.
+- Use consistent naming to sync with `dory.json` navigation.
+- Add tags or keywords if helpful for search or categorization.
+
+### Practical Example
+
+```
+docs/
+├── getting-started/
+│   ├── install-cli.mdx
+│   ├── create-project.mdx
+│   └── start-development-server.mdx
+├── guides/
+│   ├── write-mdx-content.mdx
+│   └── collaboration-and-version-control-best-practices.mdx
+├── api-reference/
+│   ├── rest-api/
+│   └── websocket-operations/
+```
+
+---
+
+## 2. Feature Organization Patterns
+
+### Align Documentation Structure to Product Features
+
+- Group content by related features or workflows.
+- Provide clear entry points per feature set in navigation (`dory.json`).
+- Use subfolders and clear naming to mirror product modules.
+
+### Use Modular Authoring
+
+- Break complex topics into multiple concise MDX pages.
+- Link related pages via cross-references and navigation.
+- Avoid huge monolithic files that are hard to review collaboratively.
+
+### Naming and Titles Consistency
+
+- Titles in frontmatter should exactly match navigation item names.
+- Avoid renaming files or titles without coordinating with the team.
+
+---
+
+## 3. Version Control Best Practices for Documentation
+
+Effective use of Git enables safe collaboration, clear history, and straightforward conflict resolution.
+
+### Commit Practices
+
+- Use descriptive, conventional commit messages tailored to docs, e.g.,:
+  - `docs(collaboration): add version control guidelines`
+  - `fix(docs): correct typo in MDX file`
+- Always stage and commit related changes together — avoid mixing unrelated edits.
+
+### Branching Strategy
+
+- Create meaningful feature or fix branches:
+  - `feature/collaboration-guide`
+  - `fix/spelling-error`
+- Push branches to remote and open pull requests for review.
+- Keep branches small and focused for easier review and merge.
+
+### Collaboration Tips
+
+- Regularly pull the latest main branch to minimize merge conflicts.
+- Use descriptive pull request titles linking to documentation purpose.
+- Review diffs carefully, especially when multiple authors edit the same MDX files.
+
+### Merge Conflict Avoidance
+
+- Coordinate large refactors or renames with the team in advance.
+- Reserve distinct documentation areas to features to reduce overlap.
+- Use lock or communication tools to flag editing hotspots if necessary.
+
+---
+
+## 4. Practical Workflow Example
+
+<Steps>
+<Step title="Prepare Your Branch">
+Create a new Git branch focused on your documentation task:
+
+```bash
+git checkout -b feature/version-control-best-practices
+```
+</Step>
+<Step title="Structure Your MDX Files">
+Arrange your topic logically as described:
+
+- Place your `.mdx` file in the appropriate folder.
+- Include frontmatter metadata for title and description.
+</Step>
+<Step title="Edit and Commit Updates">
+Work on your documentation content.
+
+Before committing:
+
+```bash
+git status
+# review changes
+git add docs/guides/collaboration-and-version-control-best-practices.mdx
+git commit -m "docs(collaboration): add best practices for version control"
+```
+</Step>
+<Step title="Sync and Push Your Branch">
+
+```bash
+git pull origin main --rebase
+# resolve any conflicts, if prompted
+git push -u origin feature/version-control-best-practices
+```
+</Step>
+<Step title="Open Pull Request and Review">
+Open a pull request on your repo, invite reviewers, and address feedback.
+
+Merge once approved to keep documentation history clean.
+</Step>
+</Steps>
+
+---
+
+## 5. Additional Tips & Common Pitfalls
+
+<Tip>
+Keep your MDX files small and focused to reduce merge conflicts.
+</Tip>
+
+<Tip>
+Regularly sync with the main branch to avoid painful merge conflicts.
+</Tip>
+
+<Warning>
+Avoid simultaneously editing the same MDX file lines as teammates without coordination.
+</Warning>
+
+<Tip>
+Use meaningful titles and descriptions in frontmatter for better navigation synchronization.
+</Tip>
+
+<Tip>
+Leverage branches and pull requests to maintain quality and clear history.
+</Tip>
+
+<Note>
+Keep your `dory.json` navigation config consistent with your structure, updating it after adding or moving MDX files.
+</Note>
+
+---
+
+## 6. Troubleshooting Common Issues
+
+### Merge Conflicts in MDX Files
+
+- Use diffs and conflict markers in Git to identify conflicting sections.
+- Communicate with other authors to decide the correct content.
+- Test locally after resolving conflicts to ensure MDX renders correctly.
+
+### Navigation Desynchronization
+
+- If pages are missing from navigation or appear in the wrong place, verify `dory.json` matches your folder and filenames.
+- Check each MDX file frontmatter has accurate metadata.
+
+### Broken Links or Missing Resources
+
+- Confirm relative links between MDX files match the actual directory structure.
+- Use the development server (`pnpm run dev`) to preview and catch broken references early.
+
+---
+
+## 7. Summary
+
+By structuring your MDX files thoughtfully and following Git-based collaboration best practices, your team can develop and maintain documentation with confidence, transparency, and efficiency. Clear file organization, consistent navigation synchronization, meaningful commit hygiene, and disciplined branching unlock a version-controlled docs workflow that scales with your project and team.
+
+---
+
+## 8. Related Resources
+
+- [Organize Pages and Navigation with dory.json](/guides/getting-started/organize-structure)
+- [Authoring Documentation in MDX](/guides/getting-started/write-mdx-content)
+- [Run the Development Server](/getting-started/first-run-validation/start-development-server)
+- [Troubleshooting Common Setup Issues](/getting-started/first-run-validation/troubleshooting-common-issues)
+
+For Git workflow details, see the [CLAUDE.md Git Commands section](https://github.com/clidey/dory/blob/main/CLAUDE.md).
+
+---
