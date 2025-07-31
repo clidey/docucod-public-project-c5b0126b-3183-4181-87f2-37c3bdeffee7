@@ -3,4 +3,243 @@ title: "WebSocket Playground & Examples"
 description: "Experiment with real-time APIs using the interactive WebSocket Playground. Test connections, exchange sample messages, inspect responses, and accelerate onboarding with practical demos and end-to-end flows."
 ---
 
-*This page will automatically be generated from the codebase*
+# WebSocket Playground & Examples
+
+Explore and experiment with real-time WebSocket APIs using the interactive WebSocket Playground. This tool empowers you to establish live connections, send and receive messages, customize headers and subprotocols, and test authentication flows—all within your documentation environment.
+
+---
+
+## Overview
+
+The WebSocket Playground offers an intuitive interface to connect with WebSocket servers defined in your API specification or demos. It simulates real-world messaging scenarios, enhancing your understanding and accelerating onboarding to your real-time APIs.
+
+Whether you are testing chat channels, presence updates, or system notifications, the playground enables seamless end-to-end interaction with your WebSocket endpoints.
+
+---
+
+## Getting Started with the WebSocket Playground
+
+Follow these straightforward steps to use the playground effectively:
+
+<Steps>
+  <Step title="Select Server and Channel">
+    Choose a WebSocket server from the dropdown list. The URL and description of each server are provided to help you identify the right endpoint.
+  </Step>
+  <Step title="Configure Connection Settings">
+    Customize headers, subprotocols, and authentication parameters using dedicated tabs. You can add, edit, or remove headers and subprotocols dynamically.
+  </Step>
+  <Step title="Connect to WebSocket Server">
+    Click the **Connect** button. Watch the status indicator to verify connection progress.
+  </Step>
+  <Step title="Send and Receive Messages">
+    Use the bottom input field to type messages and send them. Incoming messages appear in the history view, color-coded by type (sent, received, system, error).
+  </Step>
+  <Step title="Inspect and Debug">
+    Review message timestamps and content, clear the message history as needed, and monitor any connection errors.
+  </Step>
+  <Step title="Disconnect">
+    When finished, safely disconnect using the **Disconnect** button.
+  </Step>
+</Steps>
+
+---
+
+## Features
+
+- **Real-Time Connection Status:** Visual signals show whether the WebSocket is connected, connecting, disconnected, or in error.
+- **Multiple Servers Support:** Easily switch between different WebSocket servers configured within your environment.
+- **Custom Headers Management:** Add and manage request headers including authentication tokens.
+- **Subprotocol Control:** Configure and manage WebSocket subprotocols dynamically.
+- **Authentication Types:** Supports Bearer Token, API Key, Basic Auth, and no-auth connections.
+- **Comprehensive Message History:** Messages are classified with distinct colors and labels (Sent, Received, Error, System) for clear visibility.
+- **Binary Message Handling:** The playground identifies and annotates binary messages with size information.
+- **Error Reporting:** Connection and sending errors are clearly displayed with appropriate messages.
+
+---
+
+## User Interface Walkthrough
+
+### Connection Header
+
+- Displays the active channel or URL and a status indicator.
+- Buttons to **Connect** or **Disconnect** the WebSocket.
+- Status colors:
+  - Green: Connected
+  - Yellow: Connecting
+  - Red: Error
+  - Gray: Disconnected
+
+### Configuration Tabs
+
+Tabs let you customize connection details:
+
+- **Headers:** Add/edit HTTP headers sent during WebSocket handshake.
+- **Subprotocols:** Add/edit subprotocol names negotiated with the server.
+- **Auth:** Choose authentication type and enter credentials:
+  - None: No authentication.
+  - Bearer Token: Input a token for Authorization header.
+  - API Key: Input API key sent in headers.
+  - Basic Auth: Input username and password for Basic Authentication.
+
+### Messages Pane
+
+- Displays all messages with timestamp and type.
+- Sent messages are right-aligned with blue background.
+- Received messages are left-aligned with green background.
+- Errors and system messages have distinct red and gray backgrounds.
+- Message input box with a Send button activates only when connected.
+
+---
+
+## Example Usage
+
+Try these example messages to test your connection and explore message formats:
+
+```json
+{
+  "type": "chat",
+  "message": "Hello, WebSocket!",
+  "userId": "user123",
+  "timestamp": "2024-01-15T10:30:00Z"
+}
+```
+
+```json
+{
+  "type": "presence",
+  "status": "online",
+  "userId": "user123"
+}
+```
+
+```json
+{
+  "type": "notification",
+  "title": "Test Notification",
+  "message": "This is a test notification",
+  "level": "info"
+}
+```
+
+---
+
+## Integration with AsyncAPI Specifications
+
+The WebSocket Playground integrates closely with AsyncAPI definitions to reflect your real-time API's servers, channels, payloads, and parameters. It consumes AsyncAPI data to:
+
+- Populate server URL options.
+- Display channel paths and descriptions.
+- Pre-fill headers and subprotocol configurations based on AsyncAPI bindings.
+
+This integration provides an accurate, real-time testing environment reflecting your actual API contract.
+
+---
+
+## Practical Tips & Best Practices
+
+- **Server Selection:** Always verify that you select the correct WebSocket server matching the environment (development, production).
+- **Subprotocol Matching:** Configure subprotocols as per your server’s expectations to ensure handshake success.
+- **Authentication:** Securely manage tokens and credentials; avoid sharing sensitive data in shared environments.
+- **Message Format:** Use JSON or text formats consistent with your API definitions.
+- **Error Handling:** If connection errors occur, check URL correctness, headers, subprotocols, and credentials.
+- **Clearing Messages:** Clear message history to avoid clutter before new test sessions.
+
+---
+
+## Common Troubleshooting
+
+<AccordionGroup title="Troubleshooting Common Issues">
+<Accordion title="Cannot Connect to WebSocket Server">
+  - Verify the URL and protocol (ws:// or wss://).
+  - Confirm server availability and network access.
+  - Check subprotocols match server configuration.
+  - Review authentication headers and tokens.
+</Accordion>
+<Accordion title="Messages Not Sending or Receiving">
+  - Confirm connection is established (status is Connected).
+  - Verify message format and encoding (text or binary).
+  - Check if the server expects messages in specific formats or channels.
+</Accordion>
+<Accordion title="Authentication Fails">
+  - Ensure correct auth type selected.
+  - Double-check credentials.
+  - Confirm the server supports the chosen authentication scheme.
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Sample WebSocket Playground Configuration
+
+```jsx
+<WebSocketPlayground
+  url="/chat"
+  title="Real-time Chat"
+  description="Connect to a chat server and participate in real-time conversations"
+  subprotocols={["chat.v1", "json"]}
+  headers={{
+    "X-Client-Type": "web",
+    "X-Protocol-Version": "1.0"
+  }}
+  authType="bearer"
+  servers={[
+    { url: "wss://echo.websocket.org", description: "Chat Echo Server" },
+    { url: "wss://prod.websocket.example.com", description: "Production Chat Server" }
+  ]}
+/>
+```
+
+This example sets up a chat connection with subprotocols and custom headers, using bearer token authentication.
+
+---
+
+## Understanding Message Types
+
+| Type      | Description                                     | Appearance in Playground |
+|-----------|------------------------------------------------|--------------------------|
+| Sent      | Messages you send to the server                 | Blue background          |
+| Received  | Messages received from the server                | Green background         |
+| Error     | Errors related to connection or message sending | Red background           |
+| System    | Connection status updates (connected, closed)  | Gray background          |
+
+---
+
+## Extending the Playground
+
+You can embed this component into your API documentation to allow users hands-on testing with your WebSocket endpoints. It supports full customization through props for URLs, servers, headers, subprotocols, and authentication modes.
+
+This flexibility aligns with Dory’s mission to empower developers to create fast, interactive, and reliable documentation experiences.
+
+---
+
+## Related Documentation
+
+- [AsyncAPI WebSocket Guide]( /guides/api-and-interactive-guides/websocket-guide ) — Learn how to author real-time API docs with AsyncAPI and integrate playgrounds.
+- [WebSocket Authentication Reference]( /api-reference/websocket-apis/ws-auth ) — Understand authentication methods for securing WebSocket connections.
+- [Channels & Real-Time Operations]( /api-reference/websocket-apis/ws-channels ) — Details on WebSocket channels, subscribe/publish flows, and message schemas.
+- [API Playground Demo]( /docs/api-playground-demo ) — For RESTful APIs, explore the HTTP API playground component.
+
+---
+
+## Dive Deeper
+
+For a deeper understanding of how the WebSocket Playground fits into the bigger picture of your documentation platform, explore these sections:
+
+- **System Architecture:** Overview of the technology stack and platform design.
+- **Core Concepts & Terminology:** Definitions and foundational ideas around Dory and real-time APIs.
+- **Customization & Best Practices:** Tailoring your documentation and playgrounds for optimal user experience.
+
+---
+
+Harness the WebSocket Playground to turn your API documentation from static references into dynamic, interactive learning and testing environments that dramatically improve developer success and adoption.
+
+---
+
+### Resources
+
+- Live Demo of WebSocket Playground: Available directly in the documentation pages for relevant WebSocket APIs.
+- Source Code and Storybook: Check the playground component source for customization and integration.
+
+---
+
+**Start testing your WebSocket APIs now — connect, send, receive, and watch your integrations come alive!**
