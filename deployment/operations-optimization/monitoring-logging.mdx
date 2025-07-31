@@ -3,4 +3,178 @@ title: "Monitoring and Logging"
 description: "Learn how to add basic logging for traffic and errors, and set up monitoring of your static documentation site when running in production—using Nginx logs, custom middleware, or third-party analytics."
 ---
 
-*This page will automatically be generated from the codebase*
+# Monitoring and Logging
+
+Ensure your Dory-generated static documentation site not only delivers fast content but also provides robust insights into traffic patterns and errors with effective monitoring and logging. This guide walks you through essential techniques to add basic logging for traffic and errors and set up monitoring using Nginx logs, custom server middleware, or third-party analytics services.
+
+---
+
+## Why Monitoring and Logging Matter
+
+Imagine discovering after a launch that your documentation isn’t reaching users effectively or that errors silently disrupt navigation. Monitoring keeps the pulse on user engagement and site health, while logging captures detailed events that help you troubleshoot and optimize.
+
+By integrating logging and monitoring early in deployment, you empower your team to respond swiftly to issues, understand user behavior, and maintain an outstanding documentation experience.
+
+---
+
+## 1. Logging Traffic and Errors Using Nginx
+
+If you serve your static Dory site with Nginx, leveraging its built-in logging capabilities is the most straightforward approach.
+
+### Step 1: Enable and Configure Access Logs
+
+Nginx access logs give you detailed insight into every request your site receives—pages viewed, user agents, response times, and more.
+
+Add or verify this in your Nginx server block:
+
+```nginx
+server {
+    listen 80;
+    server_name your.domain.com;
+
+    root /path/to/your/dory/dist;
+    index index.html;
+
+    access_log /var/log/nginx/dory_access.log combined;
+
+    location / {
+        try_files $uri /index.html;
+    }
+}
+```
+
+The `combined` log format includes IP addresses, timestamp, HTTP request method, status codes, referrers, and user agents.
+
+### Step 2: Enable and Configure Error Logs
+
+Track server-side issues or misconfigurations by setting error logs.
+
+```nginx
+error_log /var/log/nginx/dory_error.log warn;
+```
+
+Logging at `warn` level captures warnings and errors without flooding logs with debug-level details.
+
+### Step 3: Log Rotation and Retention
+
+Set up a log rotation mechanism (`logrotate`) to archive and clean up logs securely, preventing storage overload while maintaining historic data for audits.
+
+
+<Attention>
+Always restrict access to log files and sanitize logs if they contain sensitive information.
+</Attention>
+
+---
+
+## 2. Adding Custom Middleware Logging (Optional)
+
+If your deployment stack includes a custom Node.js or middleware server proxying or serving your static files, injecting logging middleware helps you capture application-level events not visible via Nginx logs.
+
+### Example: Basic Express Middleware for Logging
+
+```javascript
+const express = require('express');
+const morgan = require('morgan');
+
+const app = express();
+
+// Log all incoming requests in combined format
+app.use(morgan('combined'));
+
+// Serve static files
+app.use(express.static('/path/to/dory/dist'));
+
+// Custom error logging
+app.use((err, req, res, next) => {
+    console.error('Error:', err.stack);
+    res.status(500).send('Something went wrong!');
+});
+
+app.listen(3000, () => {
+  console.log('Server running at http://localhost:3000');
+});
+```
+
+This setup logs HTTP requests and captures errors, giving you good visibility during runtime.
+
+### Best Practices
+
+- Use rotating log files or external log aggregation for scalability.
+- Avoid logging sensitive data such as API keys or user personal info.
+
+---
+
+## 3. Integrating Third-Party Analytics and Monitoring Services
+
+Beyond raw logs, analytics platforms provide rich dashboards and alerting features that help you monitor traffic trends and potential issues.
+
+### Popular Options
+
+- **Google Analytics / GA4**: Easy pageview tracking, user metrics, and engagement data.
+- **Plausible Analytics**: Privacy-focused, lightweight analytics ideal for static sites.
+- **Sentry / LogRocket**: For advanced error monitoring and session replay.
+
+### How to Integrate Google Analytics in Your Dory Site
+
+Add your GA tracking snippet inside your custom `<head>` in your Dory project’s main layout or injection point (e.g., via `dory.json` if supported):
+
+```html
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+```
+
+Replace `G-XXXXXXXXXX` with your actual GA4 measurement ID.
+
+### Monitoring Logs via Cloud Providers
+
+If you deploy on cloud platforms like AWS, Azure, or Google Cloud, leverage their logging and monitoring tools (CloudWatch, Log Analytics, Stackdriver) by forwarding logs from Nginx or your app.
+
+---
+
+## 4. Troubleshooting Monitoring and Logging
+
+### Traffic Log Shows No Requests
+- Confirm Nginx access logs are enabled and point to a valid writable file.
+- Verify Nginx is receiving traffic (check network/firewall).
+
+### Logs Are Excessively Large
+- Adjust log levels to reduce verbosity.
+- Set up log rotation to manage storage.
+
+### Errors Are Not Visible
+- Check error log path and permissions.
+- Confirm middleware or app error handlers are configured to log properly.
+
+### Analytics Not Reporting Data
+- Verify tracking snippet is correctly added and loaded.
+- Check for script blocking (e.g., privacy extensions).
+
+---
+
+## 5. Summary Best Practices
+
+- Always enable both access and error logging on your reverse proxy (Nginx).
+- Use standard log formats (`combined` recommended) for compatibility.
+- Add application-level logging if running middleware or proxy servers.
+- Integrate analytics for user behavior visibility.
+- Protect logs from unauthorized access.
+- Monitor log growth and use rotation tools.
+
+---
+
+## Further Reading and Related Documentation
+
+- [Deploying with Docker](https://your-docs-site/deployment/docker-cloud/docker-image-build) — Learn about containerizing your Dory site with logging in mind.
+- [Serving Static Files](https://your-docs-site/deployment/getting-started-production/serving-static-files) — Best practices to serve and configure static files including Nginx setup.
+- [Environment Variables & Configuration](https://your-docs-site/deployment/docker-cloud/environment-configuration) — How to configure environment-based logging options.
+- [Troubleshooting Common Setup Issues](https://your-docs-site/getting-started/first-run-validation/troubleshooting-common-issues) — Useful for resolving logging and monitoring setup problems.
+
+---
+
+By establishing a solid monitoring and logging foundation, you not only safeguard your documentation site against downtime and errors but also gain valuable insights to continually improve your user experience and operational reliability.
