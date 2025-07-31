@@ -1,0 +1,178 @@
+{
+  "background": {
+    "decoration": "gradient"
+  },
+  "colors": {
+    "dark": "#1E3A8A",
+    "light": "#60A5FA",
+    "primary": "#60A5FA"
+  },
+  "favicon": "/favicon.svg",
+  "fonts": {
+    "family": "Montserrat",
+    "format": "woff2",
+    "source": "https://fonts.gstatic.com/s/googlesansflex/v5/t5sJIQcYNIWbFgDgAAzZ34auoVyXkJCOvp3SFWJbN5hF8Ju1x6sKCyp0l9sI40swNJwGpVd4AZzz0v6lJ4qFXNZhGjLvDSkV4USKMo6qQzwliVdHAy9jxTDHg_ugnAakpwGc-cxgUqDCIUI.woff2"
+  },
+  "icons": {
+    "library": "fontawesome"
+  },
+  "logo": {
+    "dark": "./logo/logo.svg",
+    "light": "./logo/logo.svg"
+  },
+  "name": "Dory",
+  "navigation": {
+    "tabs": [
+      {
+        "groups": [
+          {
+            "group": "Introduction \u0026 Core Concepts",
+            "pages": [
+              "overview/introduction-core-concepts/what-is-dory",
+              "overview/introduction-core-concepts/target-audience-use-cases",
+              "overview/introduction-core-concepts/core-concepts-terminology"
+            ]
+          },
+          {
+            "group": "Architecture \u0026 Integration",
+            "pages": [
+              "overview/architecture-integration/system-architecture",
+              "overview/architecture-integration/technology-stack",
+              "overview/architecture-integration/integration-overview"
+            ]
+          },
+          {
+            "group": "Feature Overview",
+            "pages": [
+              "overview/feature-overview/features-at-a-glance",
+              "overview/feature-overview/deployment-portability"
+            ]
+          }
+        ],
+        "tab": "Overview"
+      },
+      {
+        "groups": [
+          {
+            "group": "Prerequisites \u0026 Installation",
+            "pages": [
+              "getting-started/prerequisites-installation/system-requirements",
+              "getting-started/prerequisites-installation/install-cli",
+              "getting-started/prerequisites-installation/install-docker"
+            ]
+          },
+          {
+            "group": "Project Setup \u0026 Configuration",
+            "pages": [
+              "getting-started/project-setup/create-project",
+              "getting-started/project-setup/configure-dory",
+              "getting-started/project-setup/add-docs"
+            ]
+          },
+          {
+            "group": "First Run \u0026 Basic Usage",
+            "pages": [
+              "getting-started/first-run-validation/start-development-server",
+              "getting-started/first-run-validation/build-static-site",
+              "getting-started/first-run-validation/docker-run",
+              "getting-started/first-run-validation/troubleshooting-common-issues",
+              "getting-started/first-run-validation/validate-quickly"
+            ]
+          }
+        ],
+        "tab": "Getting Started"
+      },
+      {
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "guides/getting-started/quickstart-workflow",
+              "guides/getting-started/organize-structure",
+              "guides/getting-started/write-mdx-content"
+            ]
+          },
+          {
+            "group": "Customization \u0026 Best Practices",
+            "pages": [
+              "guides/customization-and-best-practices/custom-theme-tailwind",
+              "guides/customization-and-best-practices/collaborative-authoring",
+              "guides/customization-and-best-practices/performance-and-deployment"
+            ]
+          },
+          {
+            "group": "Interactive API \u0026 Real-time Workflows",
+            "pages": [
+              "guides/api-and-interactive-guides/openapi-integration",
+              "guides/api-and-interactive-guides/websocket-guide",
+              "guides/api-and-interactive-guides/live-code-examples"
+            ]
+          }
+        ],
+        "tab": "Guides"
+      },
+      {
+        "groups": [
+          {
+            "group": "REST API",
+            "pages": [
+              "api-reference/rest-api/rest-authentication",
+              "api-reference/rest-api/rest-endpoints",
+              "api-reference/rest-api/rest-errors-status",
+              "api-reference/rest-api/rest-examples-sdks"
+            ]
+          },
+          {
+            "group": "WebSocket \u0026 Async API",
+            "pages": [
+              "api-reference/websocket-apis/ws-auth",
+              "api-reference/websocket-apis/ws-channels",
+              "api-reference/websocket-apis/ws-playground"
+            ]
+          },
+          {
+            "group": "Common API Concepts",
+            "pages": [
+              "api-reference/api-concepts-and-limits/api-rate-limiting",
+              "api-reference/api-concepts-and-limits/api-pagination"
+            ]
+          }
+        ],
+        "tab": "API Reference"
+      },
+      {
+        "groups": [
+          {
+            "group": "Production Deployment Fundamentals",
+            "pages": [
+              "deployment/getting-started-production/building-static-site",
+              "deployment/getting-started-production/serving-static-files"
+            ]
+          },
+          {
+            "group": "Container \u0026 Cloud Deployment",
+            "pages": [
+              "deployment/docker-cloud/docker-image-build",
+              "deployment/docker-cloud/deploying-cloud-platforms",
+              "deployment/docker-cloud/environment-configuration"
+            ]
+          },
+          {
+            "group": "Operations, Scaling \u0026 Security",
+            "pages": [
+              "deployment/operations-optimization/monitoring-logging",
+              "deployment/operations-optimization/scaling-strategies",
+              "deployment/operations-optimization/backup-disaster-recovery",
+              "deployment/operations-optimization/security-hardening"
+            ]
+          }
+        ],
+        "tab": "Deployment"
+      }
+    ]
+  },
+  "styling": {
+    "codeblocks": "dark",
+    "eyebrows": "breadcrumbs"
+  }
+}
