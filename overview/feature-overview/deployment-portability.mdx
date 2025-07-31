@@ -3,4 +3,235 @@ title: "Deployment & Portability"
 description: "Discover Dory’s flexible deployment model: build once, deploy anywhere. This page introduces supported hosting solutions (Netlify, Vercel, S3, GitHub Pages, Docker/Nginx) and describes the static nature that ensures no vendor lock-in."
 ---
 
-*This page will automatically be generated from the codebase*
+# Deployment & Portability
+
+## Deliver Your Documentation Anywhere, Effortlessly
+
+Dory empowers you to build your technical documentation once—and deploy it anywhere you need. Designed as a fully static site generator, it ensures your docs remain lightning-fast, portable, and free from vendor lock-in.
+
+Whether your team prefers modern cloud platforms or traditional static hosting, Dory seamlessly fits into your workflow with zero friction.
+
+---
+
+## Why Dory’s Deployment Model Matters
+
+Today’s documentation workflows demand flexibility and speed. Dory’s static architecture means your documentation is pre-built into optimized HTML, CSS, and JavaScript files that can be hosted virtually anywhere—without needing server-side rendering or complex backend infrastructure.
+
+This flexibility lets you:
+
+- Use any popular static hosting service or custom server
+- Avoid vendor lock-in and costly migrations
+- Ensure fast loading times with static assets
+- Simplify CI/CD pipelines through consistent builds
+
+
+---
+
+## Supported Deployment Targets
+
+Dory caters to various deployment preferences out-of-the-box, empowering you to deliver your documentation where it fits best.
+
+### 1. Netlify
+
+One of the most popular static deployment platforms, Netlify offers seamless Git integration and continuous deployment out of the box.
+
+**Benefits:**
+- Automatic builds triggered on Git pushes
+- Built-in HTTPS, global CDN, and cache optimization
+- Simple drag-and-drop deployment for static folders
+
+**How to deploy:**
+Push your repository to GitHub or GitLab, connect Netlify to your repo, and configure the build command `dory build` and publish directory `dist`.
+
+### 2. Vercel
+
+Vercel is a cloud platform optimized for frontend deployment with support for static sites and serverless functions.
+
+**Benefits:**
+- Zero-configuration deployment for static sites
+- Instant cache invalidation and preview URLs
+- Git integration and analytics
+
+**How to deploy:**
+Link your Git repository, set build command to `dory build`, and specify the output directory `dist` for hosting.
+
+### 3. Amazon S3 + CloudFront
+
+For teams with AWS infrastructure, deploying to an S3 bucket combined with CloudFront CDN offers scalable, cost-effective hosting.
+
+**Benefits:**
+- Full control over storage, security, and caching
+- Global content delivery with CloudFront
+- Integration with existing AWS workflows
+
+**How to deploy:**
+Build your site locally with `dory build`, then sync the `dist` directory to your S3 bucket using AWS CLI or CI/CD tools.
+
+### 4. GitHub Pages
+
+Host directly from your Git repository with GitHub’s native Pages service.
+
+**Benefits:**
+- Free static hosting for public repositories
+- Automatic site generation from specific branches or folders
+- Supports custom domains
+
+**How to deploy:**
+Push your built `dist` folder content to the `gh-pages` branch, or configure GitHub Actions to automate the build and deploy steps.
+
+### 5. Docker / Nginx
+
+Use containerization for consistent deployments across environments.
+
+**Benefits:**
+- Encapsulated static server with Nginx or other static servers
+- Easy to integrate with existing container orchestration tools
+- Replicable local and production setups
+
+**How to deploy:**
+Build your static site using `dory build`, then serve the `dist` folder with a Docker container running Nginx. An example Dockerfile is provided to get started quickly.
+
+```dockerfile
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm build
+
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+You can build and run this container locally:
+
+```bash
+docker build -t dory-docs .
+docker run -p 8080:80 dory-docs
+```
+
+Access your docs at `http://localhost:8080`.
+
+---
+
+## The Static Nature of Dory Sites
+
+Dory exclusively generates fully static websites. This has significant benefits:
+
+- **No backend dependencies:** No need for Node.js, databases, or dynamic servers in production.
+- **Speed:** Static files load instantly from CDNs or edge caches.
+- **Security:** Minimizes attack surface as there is no runtime logic.
+- **Portability:** Move your site between providers or servers without compatibility issues.
+
+The output of `dory build` is a self-contained `dist` directory, including all HTML, CSS, JavaScript, images, and assets. You can deploy this directory as-is.
+
+<Info>
+If your documentation requires dynamic elements (search, navigation, etc.), these run client-side in the browser without needing server infrastructure.
+</Info>
+
+---
+
+## Best Practices for Deployment
+
+### Build Consistency
+
+Always run `dory build` in your CI/CD pipelines or local machines to create a consistent snapshot of your docs. Avoid manually modifying files inside the `dist` directory.
+
+### Asset Cache Control
+
+Leverage HTTP caching wisely to balance fast load times with content freshness. Set appropriate cache headers depending on your hosting platform.
+
+### Continuous Deployment
+
+Configure automatic deployment pipelines using Git-based workflows (GitHub Actions, GitLab CI, Netlify/Vercel native hooks) to streamline publishing updates.
+
+### Docker Use Cases
+
+Use Docker primarily for environments where replicable builds and isolated serving environments are critical, such as corporate intranets or complex cloud setups.
+
+---
+
+## Troubleshooting Common Deployment Issues
+
+<AccordionGroup title="Deployment Troubleshooting">
+<Accordion title="Site Not Updating After Deployment">
+
+Ensure you successfully ran `dory build` before deployment. Verify that your hosting platform points to the correct directory (usually `dist`). Also, clear CDN caches if necessary.
+
+</Accordion>
+<Accordion title="Broken Links or Navigation Problems">
+
+Check your `dory.json` configuration for accurate paths and routing. Confirm all relevant `.mdx` files are included and no typos affect navigation.
+
+</Accordion>
+<Accordion title="Search or Interactive Features Not Working">
+
+Remember that Dory’s search functions run client-side. Make sure the built site includes the prebuilt search index and that JavaScript is enabled in browser.
+
+</Accordion>
+<Accordion title="Docker Container Fails to Serve Site">
+
+Confirm that the build step completed without errors, and the `dist` folder is correctly copied into the container image. Also, ensure Nginx is properly configured to serve static files.
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Getting Started with Deployment
+
+To deploy your Dory documentation site:
+
+<Steps>
+<Step title="1. Build your static site">
+Run the build command to generate static assets:
+
+```bash
+dory build
+```
+</Step>
+<Step title="2. Choose your hosting platform">
+Select from supported hosts like Netlify, Vercel, S3, GitHub Pages, or Docker.
+</Step>
+<Step title="3. Deploy the static `dist` folder">
+Upload or push your `dist` directory contents according to your chosen platform’s workflow.
+</Step>
+<Step title="4. Verify your deployed site">
+Open your deployed site URL in a browser to confirm everything works as expected.
+</Step>
+</Steps>
+
+For detailed examples and advanced configurations, consult the [Getting Started guides](/getting-started) and [Deployment Docker & Cloud](/deployment/docker-cloud) sections.
+
+---
+
+## Summary
+
+Dory’s deployment & portability model guarantees that your technical documentation is:
+
+- **Built once** and deployable everywhere
+- **Optimized for static hosting** to ensure speed and reliability
+- **Flexible** enough to work on leading platforms like Netlify, Vercel, AWS S3, GitHub Pages, or Docker containers
+
+This approach ensures maximum control, minimal complexity, and frictionless delivery no matter your infrastructure.
+
+---
+
+Explore the [Integration & Extensibility Overview](/overview/architecture-integration/integration-overview) for how deployment fits into your documentation ecosystem.
+
+
+---
+
+## Related Resources
+
+- [What is Dory?](../introduction-core-concepts/what-is-dory) — Understand Dory’s fundamentals
+- [Features at a Glance](../feature-overview/features-at-a-glance) — See other capabilities
+- [Deploying with Docker](../../deployment/docker-cloud/docker-image-build) — Detailed container setup guides
+- [Running the Development Server](../../getting-started/first-run-validation/start-development-server) — Preview locally before deploying
+
+
+---
+
+This page is part of the **Feature Overview** section under the **Overview** tab, guiding you toward swift, flexible deployment options for your static Dory documentation sites.
