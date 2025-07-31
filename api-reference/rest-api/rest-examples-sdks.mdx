@@ -3,4 +3,193 @@ title: "Code Samples & SDK Integration"
 description: "Explore ready-to-use code snippets for invoking the API from popular languages, as well as guidance for integrating with Dory’s REST API using your own HTTP client or SDK."
 ---
 
-*This page will automatically be generated from the codebase*
+# Code Samples & SDK Integration
+
+Explore ready-to-use code snippets for invoking the API from popular programming languages, along with guidance for integrating with Dory’s REST API using your own HTTP client or provided SDKs. This page equips you to quickly get started making API calls and integrating Dory into your applications.
+
+---
+
+## Overview
+
+Whether you are building your own client, scripting API calls, or embedding API requests in your application, this page provides practical sample code and SDK integration examples to accelerate your development.
+
+You will find:
+
+- Copy-paste code snippets in languages like **JavaScript**, **Python**, and **cURL**
+- Instructions for configuring authentication
+- Tips to use Dory’s API playground for interactive request testing
+- How to integrate with Dory’s generated SDK
+
+---
+
+## Using the REST API with Your HTTP Client
+
+Start by preparing your HTTP client to send requests to Dory’s API endpoints. Authentication with either Bearer Token, API Key, or Basic Auth is required (see [Authentication & Authorization](/api-reference/rest-api/rest-authentication) for details).
+
+### Sample Request Structure
+
+- Select the HTTP method and endpoint path
+- Set query parameters or path parameters
+- Include headers, especially `Authorization` for secured endpoints
+- Add JSON body where required by POST/PUT/PATCH methods
+
+### Example: Fetch a List of Items with JavaScript (Fetch API)
+
+```javascript
+async function fetchItems() {
+  const response = await fetch('https://api.example.com/items', {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer YOUR_ACCESS_TOKEN_HERE',
+      'Accept': 'application/json'
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+
+fetchItems().catch(console.error);
+```
+
+### Example: Create a New Resource Using Python (`requests` library)
+
+```python
+import requests
+
+url = 'https://api.example.com/items'
+headers = {
+    'Authorization': 'Bearer YOUR_ACCESS_TOKEN_HERE',
+    'Content-Type': 'application/json'
+}
+payload = {
+    'name': 'Sample Item',
+    'description': 'This is an example item.'
+}
+
+response = requests.post(url, json=payload, headers=headers)
+
+if response.status_code == 201:
+    print('Item created:', response.json())
+else:
+    print(f'Error: {response.status_code} - {response.text}')
+```
+
+### Example: Simple `curl` Command
+
+```bash
+curl -X GET \
+  'https://api.example.com/items?limit=10' \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN_HERE' \
+  -H 'Accept: application/json'
+```
+
+<Check>
+Remember to replace `'YOUR_ACCESS_TOKEN_HERE'` with your actual Bearer token or API key.
+</Check>
+
+---
+
+## Using the API Playground
+
+Within Dory’s documentation, interactive API playgrounds allow you to test endpoints live:
+
+- Set method, URL, and parameters
+- Edit or add authentication details
+- Send requests and view formatted responses instantly
+
+This playground supports multiple authentication schemes and lets you experiment without leaving your docs.
+
+<Info>
+Explore the API playground on any endpoint page where available. See [API Playground Demo](../docs/api-playground-demo.mdx) for a full live example.
+</Info>
+
+---
+
+## SDK Integration
+
+For streamlined development, Dory can generate SDKs (Software Development Kits) tailored to your API. Using the SDK ensures consistent request formatting, automatic handling of authentication, and convenient method calls.
+
+### Getting Started with the SDK
+
+1. **Install the SDK** via your language’s package manager (e.g., `npm`, `pip`).
+2. **Initialize the client** with your API base URL and authentication credentials.
+3. **Call API methods** directly via SDK functions.
+
+### Example: JavaScript SDK Usage
+
+```javascript
+import { DoryApiClient } from 'dory-sdk'; // example package name
+
+const client = new DoryApiClient({
+  baseUrl: 'https://api.example.com',
+  authToken: 'YOUR_ACCESS_TOKEN_HERE'
+});
+
+async function listItems() {
+  try {
+    const items = await client.items.list();
+    console.log('Items:', items);
+  } catch (error) {
+    console.error('API Error:', error);
+  }
+}
+
+listItems();
+```
+
+### Example: Python SDK Usage
+
+```python
+from dory_sdk import DoryApiClient  # example package name
+
+client = DoryApiClient(base_url='https://api.example.com', auth_token='YOUR_ACCESS_TOKEN_HERE')
+
+try:
+    items = client.items.list()
+    print('Items:', items)
+except Exception as e:
+    print('API Error:', e)
+```
+
+<Note>
+SDK package names and usage examples depend on your actual SDK release; replace placeholders accordingly.
+</Note>
+
+---
+
+## Best Practices & Tips
+
+- **Secure your credentials:** Never hardcode tokens in public repos.
+- **Use the playground:** Verify API requests and responses interactively before embedding in code.
+- **Handle errors gracefully:** SDKs and direct calls should implement retry and proper error catching.
+- **Pagination & filtering:** Support for paged queries helps manage large data sets; refer to [API Pagination & Filtering](/api-reference/api-concepts-and-limits/api-pagination).
+- **Stay updated:** API versions evolve; always check the API Reference for breaking changes.
+
+---
+
+## Troubleshooting Common Issues
+
+- **Authentication failures:** Confirm token validity and scopes. Review [Authentication & Authorization](/api-reference/rest-api/rest-authentication).
+- **Invalid parameters:** Parameters must conform to documented types and constraints.
+- **CORS errors:** When using client-side JavaScript, ensure your origin is allowed.
+- **Network errors:** Confirm the API server URL and your network connectivity.
+
+---
+
+## Further Reading
+
+- [Authentication & Authorization](/api-reference/rest-api/rest-authentication)
+- [Endpoints & Operations](/api-reference/rest-api/rest-endpoints)
+- [Error Handling & Status Codes](/api-reference/rest-api/rest-errors-status)
+- [API Playground Demo](../docs/api-playground-demo.mdx)
+- [Integration & Extensibility Overview](/overview/architecture-integration/integration-overview)
+
+---
+
+Embrace the power of Dory’s API by integrating it smoothly with your tools using the provided code samples and SDKs. Rapid onboarding and reliable calls ensure you build robust apps backed by Dory’s clean, portable documentation API.
