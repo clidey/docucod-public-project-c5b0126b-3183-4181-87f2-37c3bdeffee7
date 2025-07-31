@@ -3,4 +3,231 @@ title: "Configure Dory (dory.json)"
 description: "Overview of key settings in `dory.json`, including site structure, navigation, and page metadata. Empowers users to customize their docs arrangement and validate their configuration."
 ---
 
-*This page will automatically be generated from the codebase*
+# Configure Dory (`dory.json`)
+
+Welcome to the detailed overview of configuring Dory using the central `dory.json` file. This guide empowers you to customize your documentation site’s structure, navigation, and page metadata, enabling you to tailor how your docs are arranged and displayed.
+
+---
+
+## 1. Understanding `dory.json`
+
+The `dory.json` file is the core configuration file that defines the arrangement, navigation, and metadata of your documentation site. It acts as the blueprint for how your content is organized and helps Dory generate clean, intuitive site navigation.
+
+### Why `dory.json` Matters
+
+Dory transforms your `.mdx` files into a structured static site based on the settings you specify here. Correct configuration ensures that your site structure reflects how your users expect to find content and helps maintain consistency in page titles and descriptions.
+
+---
+
+## 2. Key Sections of `dory.json`
+
+`dory.json` primarily includes these main components:
+
+### Navigation Configuration
+
+- Defines your overall site layout with tabs, groups, and pages.
+- Enables logical grouping of related content sections for easy navigation.
+- Controls the order and hierarchy of pages displayed in sidebars and menus.
+
+### Site Metadata
+
+- Global settings like site title, description, and branding.
+- Options for theming and customization hooks.
+
+### Page Metadata Overrides
+
+- Supports explicit metadata per page, including titles and descriptions.
+- Ensures navigation menus show clear, user-friendly labels.
+
+---
+
+## 3. Structuring Navigation
+
+Navigation is defined as an array of tabs, each containing groups, which in turn contain pages:
+
+```json
+{
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Getting Started",
+        "groups": [
+          {
+            "group": "Project Setup & Configuration",
+            "pages": ["configure-dory", "create-project", "add-docs"]
+          },
+          {
+            "group": "First Run & Basic Usage",
+            "pages": ["start-development-server", "build-static-site", "docker-run"]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": ["quickstart-workflow", "organize-structure", "write-mdx-content"]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Step-by-Step:
+
+1. **Define Tabs**: Each top-level tab corresponds to a major section in your docs.
+2. **Add Groups Per Tab**: Groups organize related pages under a tab.
+3. **List Pages Within Groups**: Pages are specified by their file slugs (i.e., the filename without `.mdx`).
+
+#### Outcome:
+Your docs sidebar and top navigation will reflect this hierarchy exactly, making your site intuitive and easy to explore.
+
+> **Tip:** Use meaningful group and tab titles to guide users.
+
+---
+
+## 4. Customizing Page Metadata
+
+Each page can have metadata defined in its frontmatter within the `.mdx` file. However, `dory.json` lets you confirm or override titles and descriptions shown in navigation and search.
+
+### Example Frontmatter in a Page:
+
+```mdx
+---
+title: "Configure Dory (dory.json)"
+description: "Overview of key settings in dory.json, including site structure, navigation, and page metadata."
+---
+
+# Configure Dory
+
+Content goes here...
+```
+
+### How `dory.json` Relates
+
+- Your navigation uses these titles dynamically to label pages.
+- If no metadata is provided, Dory will fallback to a capitalized page slug.
+
+---
+
+## 5. Validation and Ordering
+
+Dory automatically processes `dory.json` to generate navigation and also:
+
+- Loads frontmatter from `.mdx` files to enrich site metadata.
+- Orders pages exactly as specified in the navigation configuration.
+- Appends any undocumented pages alphabetically to ensure no content is lost.
+
+This ensures consistency between the config and your actual docs content.
+
+---
+
+## 6. Practical Example: Edit Your Navigation
+
+Assuming your docs folder contains these `.mdx` files:
+
+```
+/docs/
+ ├─ index.mdx
+ ├─ configure-dory.mdx
+ ├─ create-project.mdx
+ ├─ add-docs.mdx
+ ├─ start-development-server.mdx
+ └─ build-static-site.mdx
+```
+
+### Update `dory.json` navigation:
+
+```json
+{
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Getting Started",
+        "groups": [
+          {
+            "group": "Project Setup & Configuration",
+            "pages": ["create-project", "configure-dory", "add-docs"]
+          },
+          {
+            "group": "First Run & Basic Usage",
+            "pages": ["start-development-server", "build-static-site"]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Reload your development server (`pnpm run dev`) and watch your navigation update to match.
+
+> **Warning:** Page slugs in `pages` must match `.mdx` filenames exactly (excluding extension). Typographical errors here will cause pages to be omitted or navigation to break.
+
+---
+
+## 7. Best Practices & Tips
+
+- **Keep your navigation shallow:** Too many nested levels can confuse users.
+- **Use descriptive group titles:** Helps user orientation, especially on large docs.
+- **Update `dory.json` when you rename or move pages:** Prevents broken links and navigation errors.
+- **Complement with frontmatter:** Maintain descriptive titles and summaries within page files.
+- **Test navigation changes by restarting dev server:** Some caching might delay updates.
+
+---
+
+## 8. Troubleshooting Common Issues
+
+### Navigation Not Showing Updated Pages
+
+- Ensure the page slug in `dory.json` matches the `.mdx` filename exactly.
+- Check for missing or malformed frontmatter in `.mdx` files.
+- Restart your development server to clear cache.
+
+### Missing Page Metadata in Navigation
+
+- Add frontmatter with `title` and `description` to the `.mdx` file.
+- Confirm JSON structure of `dory.json` is valid.
+
+### Pages Not Found
+
+- Confirm your pages are inside the `docs` folder.
+- Verify filenames are lowercase and use dashes, no spaces.
+
+---
+
+## 9. How `dory.json` Integrates With the Docs Ecosystem
+
+- Related pages like [Initialize Your Documentation Project](/getting-started/project-setup/create-project) show how to set up `docs` folder.
+- Navigation here feeds into components loading pages and frontmatter dynamically, as explained in [Store and Layout Components](/src/components/store.ts and /src/ui/layout.tsx).
+- For advanced usage, see how Dory merges and orders frontmatter during dev in the [frontmatter-dev-server plugin](/src/plugins/frontmatter-dev-server.ts).
+
+---
+
+## 10. Summary
+
+Configuring your documentation site with `dory.json` is the most powerful way to control the structure and navigation of your Dory-powered site.
+
+By clearly defining tabs, groups, and page orders—and combining this with good frontmatter metadata—you enable a fast, intuitive, and user-friendly documentation experience.
+
+Explore further to customize page metadata, experiment with navigation groups, and keep your docs perfectly organized.
+
+---
+
+## Additional Resources
+
+- [System Architecture](/overview/architecture-integration/system-architecture) — Understand how config fits into the full app
+- [Initialize Your Documentation Project](/getting-started/project-setup/create-project) — Setup basics
+- [Add & Structure Documentation Content](/getting-started/project-setup/add-docs) — How to write and organize `.mdx` content
+- [Troubleshooting Common Setup Issues](/getting-started/first-run-validation/troubleshooting-common-issues) — Fix common problems early
+
+<Tip>
+To verify your `dory.json` structure, use JSON validators and formatters to prevent syntax errors. An invalid JSON structure will cause the site to fail to load navigation.
+</Tip>
+
+<Check>
+Ensure you restart your local development server (`pnpm run dev`) after modifying `dory.json` to see navigation updates.
+</Check>
