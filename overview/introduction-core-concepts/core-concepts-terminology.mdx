@@ -3,4 +3,182 @@ title: "Core Concepts & Terminology"
 description: "Familiarize yourself with Dory’s foundational concepts and key terms: sites, pages, `.mdx` files, configuration (`dory.json`), portable static builds, and built-in components. This page establishes the basic language you’ll encounter throughout the documentation."
 ---
 
-*This page will automatically be generated from the codebase*
+# Core Concepts & Terminology
+
+Familiarize yourself with the foundational concepts and key terms you'll encounter throughout your journey with Dory. Understanding these basics will empower you to effectively create, structure, and deploy your technical documentation with ease.
+
+---
+
+## What You Will Learn on This Page
+
+- The meaning and role of **Sites** and **Pages** within Dory.
+- How `.mdx` files serve as the core content format.
+- The purpose and configuration of `dory.json`.
+- The nature and advantages of **Portable Static Builds**.
+- Overview of **Built-in Components** for enhanced documentation.
+
+---
+
+## What Are Sites and Pages?
+
+A **site** in Dory represents your entire documentation project — the full set of content, configuration, and styling that collectively deliver your docs to users.
+
+Within a site, content is organized into **pages**, each logically representing a topic or section. Pages correspond directly to `.mdx` files, which combine Markdown’s simplicity with JSX’s dynamic capabilities.
+
+### Why This Matters
+
+For you as a documentation author, this means:
+
+- Structure your content as clear, standalone units mapped to files.
+- Understand that navigation and site structure revolve around how these pages are organized.
+
+This granular approach ensures your documentation remains flexible, maintainable, and scalable.
+
+---
+
+## `.mdx` Files: The Heart of Your Documentation
+
+Dory uses `.mdx` files to define pages. MDX extends Markdown by allowing embedded components, which means you can mix prose, code, interactive elements, and custom components seamlessly.
+
+### Practical Benefits
+
+- **Rich Content**: Write explanatory text alongside live examples, interactive demos, and formatted code blocks.
+- **Developer-Friendly**: Maintain your docs in familiar Markdown while leveraging React-like components for extra functionality.
+- **Extensible**: Easily include diagrams, API references, callouts, and more without leaving your Markdown files.
+
+### Example Usage
+
+```mdx
+# Getting Started with Dory
+
+Welcome to your new documentation!
+
+<Accordion title="More Info">
+  This expandable section helps organize detailed content.
+</Accordion>
+
+```typescript
+function greet() {
+  return 'Hello, Dory!';
+}
+```
+```
+
+---
+
+## `dory.json`: Your Configuration Hub
+
+At the core of your documentation project lies `dory.json`. This single configuration file defines the structure and navigation of your site, including tabs, groups, pages, branding, and theme settings.
+
+### What `dory.json` Controls
+
+- Navigation hierarchy: Tabs and groups that organize pages.
+- Order and grouping of documentation pages.
+- Site branding elements such as logos and colors.
+- Custom settings and overrides for your project’s look and feel.
+
+### Why It’s Essential
+
+By configuring `dory.json`, you shape how visitors experience your docs without touching individual content files. Updates here immediately affect the site's navigation and organization.
+
+---
+
+## Portable Static Builds: Deploy Anywhere
+
+Dory produces purely static site builds that require no server-side rendering or backend dependencies. Your entire documentation is shipped as static HTML, CSS, and JavaScript files, ensuring blazing-fast performance and maximum portability.
+
+### Advantages to You
+
+- **Simple Deployment**: Host your docs anywhere — from GitHub Pages and Netlify to traditional web servers or cloud storage.
+- **Instant Loading**: Static sites load instantly with minimal latency, providing a top-tier user experience.
+- **Resilience**: No runtime infrastructure means less to break and maintain.
+
+### Under the Hood
+
+Dory creates a fully client-side rendered app with prebuilt navigation and content. This ensures your docs remain reactive and interactive while being lightweight and portable.
+
+---
+
+## Built-in Components: Powerful & Ready to Use
+
+Dory includes a curated set of built-in React-compatible components available within `.mdx` files to make your documentation more engaging, interactive, and professional.
+
+### Key Components You’ll Frequently Use
+
+- **Accordion**: Organize lengthy content into expandable sections to improve readability.
+- **Callouts (Note, Tip, Warning, Info, Check)**: Highlight critical or helpful information elegantly.
+- **Code and CodeGroup**: Display single or multiple language code examples side-by-side.
+- **Mermaid**: Embed diagrams and flowcharts with Mermaid syntax for clear visualization.
+- **Cards, Steps, Tables, Icons**: Lay out complex information cleanly with cards, process steps, tables, and icons.
+
+### User Scenario
+
+Imagine you want to illustrate a step-by-step process:
+
+```mdx
+<Steps>
+  <Step title="Install CLI">
+    Run `npm install -g @clidey/dory` to install.
+  </Step>
+  <Step title="Initialize Project">
+    Create your `dory.json` and add `.mdx` files.
+  </Step>
+  <Step title="Run Development Server">
+    Launch `pnpm run dev` to preview.
+  </Step>
+</Steps>
+```
+
+This makes your documentation clear and interactive without complex tooling.
+
+---
+
+## How This Page Fits Into the Documentation
+
+This page lays the essential vocabulary you’ll need to confidently navigate all other sections, from the _Introduction_ to _Getting Started_ and _Features_. It builds the language foundation before diving into technical how-tos, setup, or API integrations.
+
+For a broader understanding of Dory’s vision, also see:
+
+- [What is Dory?](/overview/introduction-core-concepts/what-is-dory) — Explains the product’s purpose and value.
+- [Who is Dory For?](/overview/introduction-core-concepts/target-audience-use-cases) — Identifies users and common use cases.
+
+---
+
+## Tips for Success
+
+- **Keep your `.mdx` content focused**: One page, one clear topic.
+- **Use `dory.json` to organize logically**: Think about how users will browse your docs.
+- **Leverage built-in components** to keep docs engaging but consistent.
+- **Remember portability**: Your docs can be deployed anywhere with minimal fuss.
+
+---
+
+## Troubleshooting Common Questions
+
+<AccordionGroup title="Common Questions About Core Concepts">
+<Accordion title="What if I don’t want to learn JSX?">
+You can write standard Markdown within `.mdx` files. Built-in components are optional enhancements that you include only when needed.
+</Accordion>
+<Accordion title="Can I customize navigation beyond `dory.json`?">
+`dory.json` is the primary method for navigation setup. For advanced cases, you can extend the theme, but this page focuses on core configuration.
+</Accordion>
+<Accordion title="How do I update page titles and descriptions?">
+Page titles and descriptions are typically defined in each `.mdx` file’s frontmatter (the YAML block at the top) and get loaded automatically.
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Next Steps
+
+Ready to dive deeper? Proceed to the [Getting Started](/getting-started/project-setup/create-project) guide to learn how to set up your first Dory site, or explore the [Features at a Glance](/overview/feature-overview/features-at-a-glance) page to discover what Dory can do.
+
+---
+
+<Info>
+Need to see the complete list of configurable options or example `dory.json` setups? Check the guides on configuration for hands-on examples and best practices.
+</Info>
+
+---
+
+<Source url="https://github.com/clidey/dory" paths={[{ path: "docs/overview/introduction-core-concepts/core-concepts-terminology.mdx", range: "1-78" }]} />
