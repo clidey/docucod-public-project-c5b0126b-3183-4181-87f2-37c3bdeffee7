@@ -3,4 +3,238 @@ title: "Installing the CLI"
 description: "Step-by-step guide to installing Dory globally using npm, with platform-specific notes where needed. Helps users quickly access the `dory` command from anywhere on their system."
 ---
 
-*This page will automatically be generated from the codebase*
+# Installing the CLI
+
+This guide walks you through installing the Dory CLI globally using npm, enabling you to run the `dory` command from any location on your system quickly and effortlessly. Whether you’re on Windows, macOS, or Linux, follow the steps below for a smooth installation.
+
+---
+
+## 1. Prerequisites & System Requirements
+
+Before proceeding, ensure your system meets the following:
+
+- **Node.js**: Version 16 or newer is required. To verify, run:
+
+  ```bash
+  node -v
+  ```
+
+- **npm**: Comes bundled with Node.js. Verify with:
+
+  ```bash
+  npm -v
+  ```
+
+- **Internet Connection**: Required to download the CLI from the npm registry.
+
+> If you do not have Node.js installed, download it from [nodejs.org](https://nodejs.org/).
+
+
+## 2. Installing Dory CLI Globally
+
+Installing the CLI globally allows you to access the `dory` command from anywhere in your terminal.
+
+<Steps>
+<Step title="Run npm install command">
+Open your terminal or command prompt and execute the following:
+
+```bash
+npm install -g @clidey/dory
+```
+
+This command downloads and installs Dory version `0.20.0` (or the latest) globally.
+
+</Step>
+<Step title="Confirm CLI installation">
+After installation completes, verify the CLI is installed correctly by checking the version:
+
+```bash
+dory --version
+```
+
+You should see the installed Dory CLI version number, confirming the installation.
+</Step>
+</Steps>
+
+<Note>
+
+If you encounter permission errors on Linux or macOS, try running the install command with elevated privileges:
+
+```bash
+sudo npm install -g @clidey/dory
+```
+
+Alternatively, consider using a Node.js version manager like `nvm` to manage global packages without `sudo`.
+</Note>
+
+## 3. Platform-Specific Considerations
+
+### Windows
+
+- Make sure your terminal (Command Prompt, PowerShell, or Windows Terminal) is running with administrator privileges if permission issues arise.
+- Restart your terminal after installation to refresh PATH environment variables.
+
+### macOS & Linux
+
+- Verify that npm's global bin directory is in your PATH environment variable. You can check by running:
+
+  ```bash
+echo $PATH
+```
+
+- If `dory` command is not recognized after installation, add npm global bin path to your shell configuration (e.g., `.bashrc` or `.zshrc`):
+
+  ```bash
+  export PATH="$PATH:$(npm bin -g)"
+  ```
+
+  Then restart your terminal.
+
+## 4. Verifying the Installation
+
+To confirm everything is working flawlessly:
+
+1. Run this command to get the help menu:
+
+   ```bash
+   dory help
+   ```
+
+2. You should see a list of available commands including `build`, `preview`, and `help` alongside their descriptions.
+
+3. Running `dory --version` should display the installed CLI version.
+
+This confirms you have full access to the Dory CLI.
+
+## 5. Next Steps: Running Dory CLI
+
+Now that you have Dory installed globally, here’s how to begin:
+
+- **Build your docs site:**
+
+  ```bash
+  dory build
+  ```
+
+- **Preview the build locally:**
+
+  ```bash
+  dory preview
+  ```
+
+- **View help anytime:**
+
+  ```bash
+  dory help
+  ```
+
+For detailed guides on using these commands, see [Run the Development Server](../first-run-validation/start-development-server) and [Build and Serve the Static Site](../first-run-validation/build-static-site).
+
+---
+
+## Troubleshooting Common Installation Issues
+
+<AccordionGroup title="Common Installation Issues">
+<Accordion title="Permission Denied Errors">
+If your install fails with permission errors:
+
+- Try using `sudo` on macOS/Linux:
+
+  ```bash
+  sudo npm install -g @clidey/dory
+  ```
+
+- Or configure npm to use a different global directory:
+
+  1. Create a directory for global packages:
+
+     ```bash
+     mkdir ~/.npm-global
+     ```
+
+  2. Configure npm to use the new directory:
+
+     ```bash
+     npm config set prefix '~/.npm-global'
+     ```
+
+  3. Add this directory to your PATH in `.bashrc` or `.zshrc`:
+
+     ```bash
+     export PATH=~/.npm-global/bin:$PATH
+     ```
+
+  4. Reload your shell and retry installation.
+</Accordion>
+<Accordion title="Command Not Found After Installation">
+- Ensure the npm global bin directory is in your PATH.
+- On Unix shells, add the following if missing:
+
+  ```bash
+  export PATH="$PATH:$(npm bin -g)"
+  ```
+
+- Restart your terminal for changes to take effect.
+</Accordion>
+<Accordion title="Network or Registry Errors">
+- Check your internet connection.
+- If behind a corporate proxy, configure npm to use your proxy settings:
+
+  ```bash
+  npm config set proxy http://proxy.company.com:8080
+  npm config set https-proxy http://proxy.company.com:8080
+  ```
+
+- Try clearing the npm cache:
+
+  ```bash
+  npm cache clean --force
+  ```
+
+- Retry installation afterward.
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Summary
+
+Congratulations! You have installed the Dory CLI globally and are ready to start building lightweight, fast, and portable documentation sites.
+
+For deeper onboarding, visit:
+
+- [System Requirements](./system-requirements) to verify your environment
+- [Initialize Your Documentation Project](../project-setup/create-project) for creating your docs
+- [Run the Development Server](../first-run-validation/start-development-server) to preview your work
+
+To contribute or explore the source code, see the [Dory GitHub repository](https://github.com/clidey/dory).
+
+
+---
+
+## Additional Resources
+
+<CardGroup cols={2}>
+<Card title="Dory CLI Reference">
+Explore all CLI commands and usage details.
+
+[Read CLI Usage](../../reference/cli-usage)
+</Card>
+<Card title="Dory Official GitHub">
+Source code, issue tracker, and contribution guidelines.
+
+[Visit GitHub Repository](https://github.com/clidey/dory)
+</Card>
+</CardGroup>
+
+
+---
+
+<Check>
+You should now be able to:
+
+- Install `dory` globally via npm.
+- Run `dory help` or `dory --version` to confirm installation.
+- Understand basic troubleshooting for common issues.
+- Confidently launch your documentation project using Dory CLI.
+</Check>
