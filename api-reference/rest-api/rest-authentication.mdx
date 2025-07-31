@@ -3,4 +3,199 @@ title: "Authentication & Authorization"
 description: "Learn how to authenticate API requests, understand supported authentication schemes (such as headers or tokens), and review best practices for securing API calls. Includes code samples for common environments and tips for managing credentials."
 ---
 
-*This page will automatically be generated from the codebase*
+# Authentication & Authorization
+
+Secure your API requests and safeguard your integrations by mastering how to authenticate and authorize access effectively. This comprehensive guide explains the supported authentication schemes, walks you through handling credentials, and provides practical examples for common environments.
+
+---
+
+## Overview
+
+Authentication and authorization are foundational to protecting your API and managing access securely. This page details how to apply authentication methods, incorporate necessary headers or tokens, and adhere to best practices that mitigate security risks.
+
+**What you'll learn:**
+- Supported authentication schemes and how to use them
+- Integrating authentication in your API requests
+- Practical code examples for various environments
+- Best practices for credential management
+- Common pitfalls and troubleshooting tips
+
+---
+
+## Supported Authentication Schemes
+
+Our API supports the following authentication methods, adaptable to different security needs:
+
+| Scheme       | Description                                   | Usage Example Header                     |
+|--------------|-----------------------------------------------|-----------------------------------------|
+| Bearer Token | OAuth 2.0-style token used in Authorization header | `Authorization: Bearer {token}`          |
+| API Key      | Unique API key submitted as a custom header    | `X-API-Key: {your_api_key}`              |
+| Basic Auth   | Username and password encoded in Authorization header | `Authorization: Basic {base64(username:password)}` |
+
+<Note>
+Always protect your keys and tokens as sensitive credentials. Do not expose them in client-side code or public repositories.
+</Note>
+
+---
+
+## Applying Authentication in API Requests
+
+Authentication is typically applied through HTTP headers. Here’s how to construct requests with each method:
+
+### 1. Bearer Token Authentication
+Include your bearer token in the `Authorization` header.
+
+```http
+GET /api/resource HTTP/1.1
+Host: api.example.com
+Authorization: Bearer abc123def456ghi789
+```
+
+### 2. API Key Authentication
+Use the `X-API-Key` header to supply your API key.
+
+```http
+POST /api/resource HTTP/1.1
+Host: api.example.com
+X-API-Key: my_api_key_123456
+Content-Type: application/json
+
+{ "data": "value" }
+```
+
+### 3. Basic Authentication
+Compose the header by base64-encoding your `username:password` pair.
+
+```bash
+# base64 encoding "user1:verySecretPwd" = dXNlcjE6dmVyeVNlY3JldFB3ZA==
+```
+
+```http
+GET /api/resource HTTP/1.1
+Host: api.example.com
+Authorization: Basic dXNlcjE6dmVyeVNlY3JldFB3ZA==
+```
+
+---
+
+## Using the API Playground with Authentication
+
+To experiment with authenticated requests interactively, utilize the built-in API Playground component. It supports all authentication types with input fields for tokens, API keys, or basic credentials.
+
+### Example: Sending a Bearer Token Request
+
+```mdx
+<APIPlayground
+  method="GET"
+  url="/api/profile/{userId}"
+  title="Get User Profile"
+  description="Retrieve the profile of a user by ID"
+  parameters={[{ name: 'userId', type: 'string', required: true, description: 'User ID to fetch' }]}
+  authType="bearer"
+  baseUrl="https://api.example.com"
+/>
+```
+
+This lets you securely enter your token and view real-time responses.
+
+<Info>
+The playground automatically handles inserting the proper headers based on your authentication choice.
+</Info>
+
+---
+
+## Best Practices for Securing API Calls
+
+- **Never hardcode credentials** in client apps or code repositories.
+- **Use environment variables** or secure vaults to manage secrets.
+- **Rotate tokens and keys regularly** to reduce the impact of exposure.
+- **Use HTTPS exclusively** to encrypt all API traffic.
+- **Apply principle of least privilege** when assigning API scopes or permissions.
+- **Validate tokens server-side** for expiry, issuer, and scopes.
+
+<Warning>
+Exposing tokens or keys in URLs or logs can lead to security breaches. Always send auth information in headers where possible.
+</Warning>
+
+---
+
+## Credential Management Tips
+
+- Store API tokens securely, never in plain text.
+- Limit token lifespan and permissions.
+- Document who has access and track usage.
+- Revoke credentials immediately if you suspect compromise.
+
+---
+
+## Troubleshooting Authentication Issues
+
+| Issue                               | Possible Cause                                     | Resolution                                    |
+|-----------------------------------|--------------------------------------------------|-----------------------------------------------|
+| 401 Unauthorized                  | Missing or invalid token/key                      | Check header names and update credentials    |
+| 403 Forbidden                    | Insufficient permissions                          | Verify scopes or roles associated with token |
+| Authentication header ignored     | Improper header format or encoding                | Correctly format and encode headers             |
+| Connection refused on HTTPS       | Invalid SSL/TLS setup or proxy issues             | Confirm SSL cert validity and network settings |
+
+<Check>
+If facing persistent failures, use the API Playground to test credentials and inspect full request/response headers.
+</Check>
+
+---
+
+## Summary
+
+Authentication safeguards your API endpoints, ensuring only authorized users and applications can access functionality or data. Apply the described schemes correctly in your requests, manage your credentials securely, and leverage the API Playground for hands-on testing.
+
+---
+
+## Additional Resources
+
+- [Endpoints & Operations](/api-reference/rest-api/rest-endpoints) — Explore secured endpoints
+- [Error Handling & Status Codes](/api-reference/rest-api/rest-errors-status) — Understand common auth error responses
+- [Code Samples & SDK Integration](/api-reference/rest-api/rest-examples-sdks) — See auth usage in SDKs and samples
+- [Rate Limiting & Quotas](/api-reference/api-concepts-and-limits/api-rate-limiting) — Best practices on usage limits
+
+For WebSocket authentication methods, see the [WebSocket Authentication](/api-reference/websocket-apis/ws-auth) page.
+
+---
+
+## Frequently Asked Questions
+
+<AccordionGroup title="Authentication FAQs">
+<Accordion title="How do I obtain an API token?">
+Tokens are typically issued through your account dashboard or via an OAuth flow specific to your application. Consult the API provider or administrator for token creation details.
+</Accordion>
+<Accordion title="Can I use multiple auth methods together?">
+Usually, only one authentication method is required per request. Using multiple auth headers may cause errors unless explicitly supported.
+</Accordion>
+<Accordion title="What if I lose my API key?">
+Immediately revoke the compromised key from your management console and generate a new one. Update your applications with the new key promptly.
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Authentication Flow Diagram
+
+```mermaid
+sequenceDiagram
+    participant Client as API Client
+    participant Server as API Server
+
+    Client->>Server: Sends request with Authorization header
+    Server-->>Server: Validates token/key
+    alt Token valid
+      Server-->>Client: Responds with data (200 OK)
+    else Token invalid or missing
+      Server-->>Client: Responds 401 Unauthorized
+    end
+```
+
+---
+
+With this guide, you are now equipped to secure your API requests confidently and efficiently.
+
+---
+
+*This documentation aligns with the broader Dory API Reference guide and integrates with the API Playground for interactive testing.*
