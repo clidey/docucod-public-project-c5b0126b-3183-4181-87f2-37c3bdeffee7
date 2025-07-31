@@ -3,4 +3,236 @@ title: "Building the Static Site"
 description: "Learn how to generate a production-ready static version of your documentation using Dory. This guide covers essential CLI commands, output directories, and what files are required to serve your site anywhere."
 ---
 
-*This page will automatically be generated from the codebase*
+# Building the Static Site
+
+Learn how to generate a production-ready static version of your documentation using Dory. This guide covers the essential CLI commands, the structure of output directories, and the required files to serve your site anywhere.
+
+---
+
+## Why Build a Static Site?
+
+Building a static version of your documentation is the crucial step that transforms your authored `.mdx` files and configuration into a fully portable, optimized website. This static site can then be deployed seamlessly to any standard static hosting service — from Netlify and Vercel to GitHub Pages or even your own Nginx server.
+
+By running the build, you ensure your documentation is:
+
+- **Optimized for performance:** Dory compiles and bundles your site assets efficiently.
+- **Navigation-ready:** Page titles and frontmatter metadata are properly indexed.
+- **Self-contained:** All necessary HTML, CSS, JavaScript, images, and assets are generated for offline-ready, client-side rendering.
+
+# Getting Started: Build Command Overview
+
+Dory offers a straightforward CLI to build your static site.
+
+### Run the Build Command
+
+In your project root, execute:
+
+```bash
+pnpm run build
+```
+
+or if you have installed Dory globally:
+
+```bash
+dory build
+```
+
+This command handles everything needed to generate your static site:
+
+- Verifies that your `docs/` directory and `dory.json` configuration are present.
+- Clears any previous builds ensuring a clean slate.
+- Processes all `.mdx` documentation content in the configured order.
+- Generates a comprehensive `dist` directory containing the static output.
+
+<Tip>
+Always run a full clean build after making significant changes to your documentation structure or content to avoid stale artifacts.
+</Tip>
+
+---
+
+## What Happens During the Build?
+
+Behind the scenes, Dory performs several key steps:
+
+- **Navigation order is inferred** from your `dory.json` file.
+- All `.mdx` files under `docs/` are read, parsed for frontmatter, and compiled.
+- A static JSON index of frontmatter metadata (`frontmatter.json`) is generated reflecting page titles, descriptions, and order.
+- The site assets (HTML, CSS, JS) are bundled and minified.
+
+These output files appear in the `dist` directory, ready for deployment.
+
+---
+
+## Understanding the Output Directory Structure
+
+After building, your project directory will contain a new `dist/` folder:
+
+```
+/dist
+  ├── index.html            # The static entry point for your docs
+  ├── assets/               # Bundled JavaScript, CSS, images
+  ├── frontmatter.json      # Indexed page metadata for navigation
+  ├── ...                   # Other static assets and supporting files
+```
+
+### Key Files Explained
+
+- **`index.html`**
+  The main HTML file that browsers load to display your documentation site. It bootstraps the client-side app.
+
+- **`assets/`**
+  Contains compiled JavaScript and CSS files optimized for fast loading.
+
+- **`frontmatter.json`**
+  A JSON file generated in build that lists all documentation pages with their metadata extracted from frontmatter. This file powers navigation menus, search indexing, and page ordering.
+
+<Tip>
+This structure allows hosting on any static file server with no backend required.
+</Tip>
+
+---
+
+## CLI Commands Related to Static Site Generation
+
+| Command            | Description                                                      |
+|--------------------|------------------------------------------------------------------|
+| `dory build`       | Builds the production-ready static site in the `dist/` folder.  |
+| `dory preview`     | Locally serves the static site from the `dist/` folder for QA.|
+| `pnpm run build`    | Equivalent npm script to build the static site using `dory`.     |
+| `pnpm run preview`  | Run a local static server to preview the production build.      |
+
+### Previewing the Build Locally
+
+Once the build completes, you can preview the static site locally to ensure all assets and pages render as expected:
+
+```bash
+pnpm run preview
+```
+
+This spins up a lightweight local server serving the contents of `dist/`.
+
+---
+
+## Requirements Before Building
+
+Make sure you have:
+
+- A valid `dory.json` configuration file in your project root.
+- Your documentation content (*.mdx files) populated inside the `docs/` folder.
+- Your development dependencies installed via `pnpm install`.
+
+<Tip>
+Verify your project runs smoothly in development mode (`pnpm run dev`) prior to building the static site to catch hydration or routing issues early.
+</Tip>
+
+---
+
+## Common Scenarios and Tips
+
+### Organizing Your Content for Clean Builds
+
+Your static build reflects the file structure and navigation defined in `dory.json`. To avoid build warnings or missing pages:
+
+- Ensure all pages listed in `dory.json` exist as `.mdx` files under `docs/`.
+- Use consistent naming conventions and folder layouts.
+- Utilize frontmatter metadata in your MDX to set page titles which appear in navigation.
+
+### Handling Extra MDX Files
+
+Files not explicitly listed in `dory.json` but found in `docs/` will still be included at the end of the frontmatter index. This lets you drop standalone pages without navigation.
+
+### Troubleshooting Build Failures
+
+- Double-check that all `.mdx` files have valid YAML frontmatter if used.
+- Review the console output for file path mismatches or syntax errors.
+- Run a clean build by deleting the `dist/` folder before rebuilding.
+
+<Tip>
+If the build fails due to file permission errors, ensure you have read/write access to your project folders.
+</Tip>
+
+---
+
+## Deploying the Static Site
+
+Once generated, your `dist/` folder can be deployed to any static hosting solution:
+
+- **Netlify:** Drag and drop the `dist/` folder or configure deployment to point to it.
+- **Vercel:** Use the static site configuration pointing to the `dist/` directory.
+- **GitHub Pages:** Push `dist/` to your repository's `gh-pages` branch.
+- **Amazon S3 or Azure Storage:** Upload contents of `dist` for static file hosting.
+- **Nginx or Apache:** Serve the `dist/` folder as a static site root.
+
+<Tip>
+Use continuous integration (CI) pipelines to automate the build and deploy process to simplify ongoing content updates.
+</Tip>
+
+---
+
+## Summary
+
+Building the static site with Dory creates a fast, portable, production-ready version of your documentation. It turns your `.mdx` files and config into a self-contained web app, perfectly suited for static hosting anywhere. By following this guide, you enable seamless, reliable delivery of your documentation to your audience.
+
+---
+
+For the next step, see **[Serving Static Files](../serving-static-files)** to learn how to configure and serve the generated site effectively.
+
+---
+
+## Additional Resources
+
+- [Dory CLI Installation & Usage](../../getting-started/prerequisites-installation/install-cli)
+- [Configuring Navigation with `dory.json`](../../getting-started/project-setup/configure-dory)
+- [Adding and Structuring Documentation Content](../../getting-started/project-setup/add-docs)
+- [Troubleshooting Common Build Issues](../../getting-started/first-run-validation/troubleshooting-common-issues)
+- [Deploying with Docker](../docker-cloud/docker-image-build)
+
+
+---
+
+## Example: Basic Build Workflow
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run development server to preview locally
+pnpm run dev
+
+# When ready, build static site for production
+pnpm run build
+
+# Preview the build
+pnpm run preview
+```
+
+---
+
+## Troubleshooting Tips
+
+<AccordionGroup title="Common Build Issues and Solutions">
+<Accordion title="Missing or Misnamed `dory.json`">
+Ensure that `dory.json` is in the correct directory and matches your site's navigation structure. If missing, `dory build` will fail or produce incomplete output.
+</Accordion>
+<Accordion title="Navigation Pages Not Found">
+Verify all pages listed in `dory.json` exist as `.mdx` files under `docs/`. Paths are case-sensitive and must align.
+</Accordion>
+<Accordion title="Build Fails with Frontmatter Parsing Errors">
+Check your `.mdx` files for valid YAML frontmatter blocks delimited by `---`. Syntax errors or missing colons can break parsing.
+</Accordion>
+<Accordion title="Output `dist` Folder Not Generated">
+Make sure you have write permissions in your project directory. Delete existing `dist` manually before rebuilding to avoid corrupted outputs.
+</Accordion>
+<Accordion title="Preview Server Does Not Display Content">
+Validate that `pnpm run preview` is running on the expected port and your browser cache is cleared. Check console for JavaScript errors.
+</Accordion>
+</AccordionGroup>
+
+---
+
+# Next Steps
+
+Explore how to serve the static files after build in **[Serving Static Files](../serving-static-files)**, covering deployment on popular platforms and best practices for performance and security.
+
+
+<Source url="https://github.com/clidey/dory" paths={[{"path": "scripts/generate-frontmatter-json.js", "range": "1-108"},{"path": "README.md", "range": "59-110"}]} />
