@@ -3,4 +3,228 @@ title: "Performance Optimization & Seamless Deployment"
 description: "Learn how to build and deploy your site for maximum speed and reliability. Covers static builds, serving with Docker/Nginx, and targeting various platforms with minimal configuration."
 ---
 
-*This page will automatically be generated from the codebase*
+# Performance Optimization & Seamless Deployment
+
+Optimize the build and deployment of your Dory documentation site to deliver maximum speed, reliability, and portability. This guide covers static site generation, Docker and Nginx serving, and targeting popular hosting platforms with minimal configuration.
+
+---
+
+## 1. Workflow Overview
+
+### Task Description
+Learn how to efficiently build a production-ready static site from your Dory docs and deploy it anywhere—whether using Docker, Nginx, or popular cloud platforms—while ensuring fast load times and stable delivery.
+
+### Prerequisites
+- A fully configured Dory documentation project with valid `dory.json` navigation
+- Completed local validation of docs and navigation (e.g., development server runs correctly)
+- Installed dependencies and build tools (`pnpm`, Node.js)
+- Optional: Docker installed for containerized deployment
+
+### Expected Outcome
+By following this guide, you will:
+- Generate a performant static build of your documentation
+- Serve the static files locally or inside a Docker container
+- Deploy your docs to cloud platforms or static hosting with confidence
+
+### Time Estimate
+~15-30 minutes for build and test deployments; additional time for cloud platform configurations
+
+### Difficulty Level
+Intermediate — requires familiarity with command line, basic Docker usage, and static hosting concepts
+
+---
+
+## 2. Step-by-Step Instructions
+
+### Step 1: Build Production Static Site
+
+1. Open your terminal in the project root.
+2. Run the build command:
+
+```bash
+pnpm run build
+```
+
+3. This command prepares and compiles all documentation content into a static bundle inside the `dist` folder.
+
+**Expected result:**
+- A `dist/` directory containing HTML, CSS, JS, and assets ready for static serving.
+- Terminal output confirming build completion and the number of processed `.mdx` files.
+
+> The `pnpm run build` script bundles your site using Vite and generates a static output without server dependencies.
+
+---
+
+### Step 2: Preview Locally Before Deployment
+
+To verify your static build:
+
+```bash
+pnpm run preview
+```
+
+This runs a lightweight local static server, usually at `http://localhost:4173`.
+
+**Expected result:**
+- Your documentation site is fully navigable and renders correctly.
+
+> Confirm that links, images, Mermaid diagrams, and any custom components render as expected.
+
+---
+
+### Step 3: Serve with Docker and Nginx
+
+Dory provides an official Docker image tailored for serving static docs via Nginx.
+
+#### Option A: Use the Official Docker Image
+
+1. Create a `Dockerfile` in your project root:
+
+```dockerfile
+FROM clidey/dory
+WORKDIR /app
+COPY . .
+RUN dory build
+CMD ["dory", "preview"]
+```
+
+2. Build your Docker image:
+
+```bash
+docker build -t your-docs-site:latest .
+```
+
+3. Run the container, exposing port 8080:
+
+```bash
+docker run -it -p 8080:80 your-docs-site:latest
+```
+
+4. Open `http://localhost:8080` in your browser to view.
+
+#### Option B: Serve Only the Built Site Using Nginx
+
+If you prefer to build locally and serve the `dist` folder separately:
+
+1. Build your site locally as above.
+2. Create a Dockerfile using the official Nginx image:
+
+```dockerfile
+FROM nginx:alpine
+COPY dist/ /usr/share/nginx/html/
+EXPOSE 80
+```
+
+3. Build and run this image:
+
+```bash
+docker build -t docs-nginx:latest .
+docker run -it -p 8080:80 docs-nginx:latest
+```
+
+4. Access your docs at `http://localhost:8080`.
+
+---
+
+### Step 4: Deploy to Popular Static Hosts
+
+Because Dory produces pure static files, deployment is straightforward.
+
+#### Supported Platforms
+- **Netlify**
+- **Vercel**
+- **GitHub Pages**
+- **Amazon S3 / CloudFront**
+
+#### General Steps
+1. Push your source docs and `dory.json` to a Git repository.
+2. Configure your hosting platform to:
+   - Build the project by running `pnpm run build` or your chosen build script.
+   - Publish the contents of the `dist` directory as the site's root.
+
+#### Example: Netlify
+- Connect your repo to Netlify.
+- Set build command: `pnpm run build`
+- Set publish directory: `dist`
+
+> Netlify automatically detects the static build and deploys your documentation efficiently with built-in CDN caching.
+
+---
+
+## 3. Practical Examples
+
+### Minimal Dockerfile for Static Serving
+
+```dockerfile
+FROM clidey/dory
+WORKDIR /app
+COPY . .
+RUN dory build
+CMD ["dory", "preview"]
+```
+
+Build & run:
+
+```bash
+docker build -t dory-docs .
+docker run -p 8080:80 dory-docs
+```
+
+### Nginx-Only Static Serving Dockerfile
+
+```dockerfile
+FROM nginx:alpine
+COPY dist/ /usr/share/nginx/html/
+EXPOSE 80
+```
+
+Build & run:
+
+```bash
+docker build -t docs-nginx .
+docker run -p 8080:80 docs-nginx
+```
+
+---
+
+## 4. Troubleshooting & Tips
+
+### Common Issues
+- **Build errors due to invalid `dory.json` or missing MDX files**
+  - Verify `dory.json` syntax and that your `.mdx` content matches navigation entries.
+  - Run `pnpm run dev` and resolve errors before building.
+
+- **Static site missing content or broken paths post-build**
+  - Check for correct relative paths in images and links.
+  - Ensure no absolute URLs point to local dev servers.
+
+- **Docker container not serving**
+  - Confirm port mapping is correct (`-p hostPort:containerPort`).
+  - Check container logs for errors.
+
+### Best Practices
+- Commit your `dory.json` and docs content before building to avoid inconsistencies.
+- Use containerized build environments to ensure reproducible builds.
+- Preview your site locally (`pnpm run preview`) to catch runtime issues early.
+- Minimize large assets or optimise images to improve load performance.
+
+### Performance Considerations
+- Dory's static output benefits from CDN caching; deploy through a CDN for best global performance.
+- Avoid heavy client-side scripts that can slow down loading.
+- Leverage browser caching with appropriate HTTP headers via your server or CDN.
+
+### Alternative Approaches
+- Use a CI/CD pipeline to automate build and deployment on each Git push.
+- Integrate with Cloudflare Pages or similar platforms supporting static site hosting.
+
+---
+
+## 5. Next Steps & Related Content
+
+- **Organize Pages and Navigation with dory.json:** Manage your navigation structure for smoother builds - [Organize Pages](../getting-started/project-setup/configure-dory)
+- **Run the Development Server:** Preview docs locally in real-time - [Start Development Server](../getting-started/first-run-validation/start-development-server)
+- **Docker Installation (Optional):** Install and configure Docker for containerized runs - [Install Docker](../getting-started/prerequisites-installation/install-docker)
+- **Deploying with Docker:** Details on Docker image build and deployment - [Deploying with Docker](../../deployment/docker-cloud/docker-image-build)
+- **Serving Static Files:** Learn about serving the static build securely - [Serving Static Files](../../deployment/getting-started-production/serving-static-files)
+
+---
